@@ -174,6 +174,7 @@ public class TicTacToe extends Application{
 			startGame(primaryStage);
 		});
 		
+		
 		exitButton.setOnAction(e ->{
 			primaryStage.close();
 		});
