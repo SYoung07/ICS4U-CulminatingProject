@@ -149,6 +149,7 @@ public class TicTacToe extends Application{
 		}
 		return true;
 	}
+	
 	/**
 	 * Resets the board back to the starting position
 	 */
