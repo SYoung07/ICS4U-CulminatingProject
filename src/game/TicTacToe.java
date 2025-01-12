@@ -15,9 +15,9 @@ public class TicTacToe extends Application{
 	private char[][] board = new char[3][3];
 	private String gameMode;
 	private Label statusLabel = new Label();
-	
+	Scene gameScene;
 	private boolean player1Turn;
-
+	GridPane gridPane = new GridPane();
 
 	@Override
 	public void start(Stage primaryStage) throws Exception {
@@ -53,7 +53,6 @@ public class TicTacToe extends Application{
 
 
 	private void startGame(Stage primaryStage) {
-		GridPane gridPane = new GridPane();
 
 		gridPane.setAlignment(Pos.CENTER);
 		gridPane.setGridLinesVisible(true);
@@ -76,9 +75,9 @@ public class TicTacToe extends Application{
 				gridPane.add(square, row, column);
 			}
 		}
-		VBox layout = new VBox(gridPane, statusLabel);
-		layout.setAlignment(Pos.CENTER);
-		Scene gameScene = new Scene(layout, 400, 300);
+		VBox mainLayout = new VBox(gridPane, statusLabel);
+		mainLayout.setAlignment(Pos.CENTER);
+		gameScene = new Scene(mainLayout, 400, 300);
 		primaryStage.setScene(gameScene);
 		primaryStage.setMaximized(false);
 		primaryStage.setMaximized(true);
@@ -180,12 +179,8 @@ public class TicTacToe extends Application{
 			primaryStage.close();
 		});
 		VBox layout = new VBox(10, mainMenuButton, restartButton, exitButton);
-		layout.setStyle("-fx-padding: 30px;");
-		Scene restartScene = new Scene(layout,400, 300);
-		primaryStage.setScene(restartScene);
-		primaryStage.setMaximized(false);
-		primaryStage.setMaximized(true);
-		
+		gameScene.setRoot(layout);
+		primaryStage.setScene(gameScene);
 	}
 
 
