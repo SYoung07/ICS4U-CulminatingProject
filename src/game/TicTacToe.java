@@ -24,7 +24,6 @@ public class TicTacToe extends Application{
 		resetBoard();
 		showMainMenu(primaryStage);
 		
-
 	}
 
 	private void showMainMenu(Stage primaryStage) {
@@ -58,7 +57,7 @@ public class TicTacToe extends Application{
 		gridPane.setAlignment(Pos.CENTER);
 		gridPane.setGridLinesVisible(true);
 		gridPane.setStyle("-fx-font-size: 75px;"); // makes the text of the grid bigger (the X's and O's)
-		statusLabel.setStyle("-fx-font-size: 25px;"); // makes the text of the statusLabel bigger
+		statusLabel.setStyle("-fx-font-size: 25px;"); // makes the text of the status label bigger
 		for (int i = 0; i<3; i++) {
 			for (int j = 0; j<3; j++) {
 				Button square = new Button();
@@ -112,7 +111,7 @@ public class TicTacToe extends Application{
 				statusLabel.setText("It's a Draw!");
 				showRestart(primaryStage);
 			
-			} else { // if there isnt any wins/draws continue and display whos turn it is
+			} else { // if there isn't any wins/draws continue and display who's turn it is
 				player1Turn =! player1Turn; // flips the turn from player1 to not player 1(player 2)
 				if(player1Turn) {
 					statusLabel.setText("Player 1's Turn (X)");
@@ -187,11 +186,15 @@ public class TicTacToe extends Application{
 		primaryStage.setMaximized(true);
 		
 	}
-
-
-
-
-
+	public void scoreCounter (Stage primaryStage) {
+	    int player1Score = 0;
+	    int player2Score = 0;
+	    
+	    Label player1 = new Label("Player 1 score is " + player1Score);
+	    Label player2 = new Label("Player 2 score is " + player2Score);
+	    
+	}
+	
 	public static void main(String[] args) {
 		launch(args);
 	}
