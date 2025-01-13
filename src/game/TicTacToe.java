@@ -182,8 +182,12 @@ public class TicTacToe extends Application{
 		gameScene.setRoot(layout);
 		primaryStage.setScene(gameScene);
 	}
-
-
+	
+	
+	public static void scoreCounter () {
+		Label 
+	}
+	
 
 
 
