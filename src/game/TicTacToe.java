@@ -6,6 +6,7 @@ import javafx.geometry.Pos;
 import javafx.scene.Scene;
 import javafx.scene.control.Button;
 import javafx.scene.control.Label;
+import javafx.scene.layout.BorderPane;
 import javafx.scene.layout.GridPane;
 import javafx.scene.layout.VBox;
 import javafx.stage.Stage;
@@ -18,7 +19,8 @@ public class TicTacToe extends Application{
 	Scene gameScene;
 	private boolean player1Turn;
 	GridPane gridPane = new GridPane();
-
+	VBox mainLayout = new VBox();
+	VBox layout1 = new VBox();
 	@Override
 	public void start(Stage primaryStage) throws Exception {
 		resetBoard();
@@ -75,9 +77,11 @@ public class TicTacToe extends Application{
 				gridPane.add(square, row, column);
 			}
 		}
-		VBox mainLayout = new VBox(gridPane, statusLabel);
+		mainLayout = new VBox(gridPane, statusLabel);
+//		game.setCenter(mainLayout);	
 		mainLayout.setAlignment(Pos.CENTER);
 		gameScene = new Scene(mainLayout, 400, 300);
+//		gameScene = new Scene(game, 400, 300);
 		primaryStage.setScene(gameScene);
 		primaryStage.setMaximized(false);
 		primaryStage.setMaximized(true);
@@ -178,9 +182,10 @@ public class TicTacToe extends Application{
 		exitButton.setOnAction(e ->{
 			primaryStage.close();
 		});
-		VBox layout = new VBox(10, mainMenuButton, restartButton, exitButton);
-		gameScene.setRoot(layout);
-		primaryStage.setScene(gameScene);
+		gridPane.setAlignment(Pos.CENTER);
+		layout1.getChildren().addAll(mainMenuButton, restartButton, exitButton);
+//		game.setLeft(layout1);
+//		primaryStage.setScene(gameScene);
 	}
 
 
