@@ -8,6 +8,7 @@ import javafx.scene.control.Button;
 import javafx.scene.control.Label;
 import javafx.scene.layout.BorderPane;
 import javafx.scene.layout.GridPane;
+import javafx.scene.layout.HBox;
 import javafx.scene.layout.VBox;
 import javafx.stage.Stage;
 
@@ -16,16 +17,23 @@ public class TicTacToe extends Application{
 	private char[][] board = new char[3][3];
 	private String gameMode;
 	private Label statusLabel = new Label();
-	Scene gameScene;
 	private boolean player1Turn;
 	GridPane gridPane = new GridPane();
-	VBox mainLayout = new VBox();
-	VBox layout1 = new VBox();
+	private BorderPane gameLayout = new BorderPane();
+	private VBox buttonBox = new VBox(10);
+	private int player1Score = 0;
+	private int player2Score = 0;
+	private int draws = 0;
+	private Label player1ScoreLabel = new Label("Player 1: " + player1Score);
+	private Label player2ScoreLabel = new Label("Player 2: " + player2Score);
+	private Label drawsLabel = new Label("Draws:" + draws);
+	private boolean gameOver;
 	@Override
 	public void start(Stage primaryStage) throws Exception {
 		resetBoard();
 		showMainMenu(primaryStage);
-		
+
+
 
 	}
 
@@ -55,7 +63,13 @@ public class TicTacToe extends Application{
 
 
 	private void startGame(Stage primaryStage) {
+		// reset to player 1's turn
+		player1Turn = true; 
+		statusLabel.setText("Player 1's Turn (X)");
+		gameOver = false;
 
+		gridPane = new GridPane();
+		gameLayout = new BorderPane();
 		gridPane.setAlignment(Pos.CENTER);
 		gridPane.setGridLinesVisible(true);
 		gridPane.setStyle("-fx-font-size: 75px;"); // makes the text of the grid bigger (the X's and O's)
@@ -75,48 +89,98 @@ public class TicTacToe extends Application{
 					}
 				});
 				gridPane.add(square, row, column);
+
 			}
+
 		}
-		mainLayout = new VBox(gridPane, statusLabel);
-//		game.setCenter(mainLayout);	
-		mainLayout.setAlignment(Pos.CENTER);
-		gameScene = new Scene(mainLayout, 400, 300);
-//		gameScene = new Scene(game, 400, 300);
+
+		// reserve space for the button box on the left to prevent it from moving the board when shown later
+		buttonBox.setAlignment(Pos.CENTER_LEFT);
+		buttonBox.setStyle("-fx-padding: 10;"); // spacing from the wall
+		buttonBox.setPrefWidth(250); // reserve space on the left
+		buttonBox.getChildren().clear(); // empty the left side 
+
+		// this allows the board to be in the exact center of the screen since there is now a 200 px reserve on both sides from the buttonBox and this spacer
+		VBox spacer = new VBox(10);
+		spacer.setAlignment(Pos.CENTER_RIGHT);
+		spacer.setPrefWidth(250);
+		spacer.setStyle("-fx-padding: 10;"); // spacing from the wall
+		spacer.getChildren().clear(); // empty the right side 
+		// add score labels at the top and change the colours of them
+		Label scoreText = new Label("SCORES");
+		player1ScoreLabel.setStyle("-fx-font-size: 35px; -fx-text-fill: blue;");
+		player2ScoreLabel.setStyle("-fx-font-size: 35px; -fx-text-fill: red;");
+		scoreText.setStyle("-fx-font-size: 35px; -fx-text-fill: black;");
+		drawsLabel.setStyle("-fx-font-size: 35px; -fx-text-fill: gray;");
+
+		HBox scoreBox = new HBox(100, player1ScoreLabel, drawsLabel, player2ScoreLabel);
+		scoreBox.setAlignment(Pos.TOP_CENTER);
+		scoreText.setAlignment(Pos.TOP_CENTER);
+		scoreBox.setStyle("-fx-font-size: 35px;");
+
+		// this is to have the SCORE text along with player score aligned at the top
+		VBox scoreLayout = new VBox(scoreText, scoreBox);
+		scoreLayout.setAlignment(Pos.CENTER);
+		VBox centerLayout = new VBox(gridPane, statusLabel);
+
+		centerLayout.setAlignment(Pos.CENTER);
+
+		// adds all VBox's/HBox's to a BorderPane for organization
+		gameLayout.setTop(scoreLayout);
+		gameLayout.setCenter(centerLayout);
+		gameLayout.setLeft(buttonBox);
+		gameLayout.setRight(spacer);
+
+		Scene gameScene = new Scene(gameLayout);
 		primaryStage.setScene(gameScene);
 		primaryStage.setMaximized(false);
 		primaryStage.setMaximized(true);
-		
+
 
 	}
-	
+
 	public void twoPlayerMove(Button square, int row, int column, Stage primaryStage) {
-		// if the square is empty
-		if(board[row][column] == ' ') {
+		// if the square is empty and the game isn't over
+		if(board[row][column] == ' ' && !gameOver) {
 			char currentPlayer;
 			// if its player 1's turn
 			if(player1Turn) {
 				currentPlayer = 'X';
+				square.setStyle("-fx-text-fill: blue;");  // set the color for X to blue
 			} else { // player 2's turn
 				currentPlayer = 'O';
+				square.setStyle("-fx-text-fill: red;");   // set the color for O to red
 			}
+
 			// adds the move to the 2d array which will be used to check who wins later
 			board[row][column] = currentPlayer;
 			// changes the visible grid to the player move
-			square.setText(String.valueOf(currentPlayer)); // string.valueof converts the char to a string because 
-			
+			square.setText(String.valueOf(currentPlayer)); // string.valueof converts the char to a string because .setText needs a string
+
 			if(checkWin(currentPlayer)) {
 				if(player1Turn) {
 					statusLabel.setText("Player 1 Wins!");
+					// updates score
+					player1Score++;
+					player1ScoreLabel.setText("Player 1: " + player1Score);
+					gameOver = true;
 				} else {
 					statusLabel.setText("Player 2 Wins!");
+					// updates score
+					player2Score++;
+					player2ScoreLabel.setText("Player 2: " + player2Score);
+					gameOver = true;
 				}
 				showRestart(primaryStage);
 			} else if(isBoardFull()) {
 				statusLabel.setText("It's a Draw!");
+				draws++;
+				drawsLabel.setText("Draws: " + draws);
+				gameOver = true;
 				showRestart(primaryStage);
-			
+
 			} else { // if there isnt any wins/draws continue and display whos turn it is
-				player1Turn =! player1Turn; // flips the turn from player1 to not player 1(player 2)
+				player1Turn =! player1Turn; // switches turns
 				if(player1Turn) {
 					statusLabel.setText("Player 1's Turn (X)");
 				} else {
@@ -152,7 +216,7 @@ public class TicTacToe extends Application{
 		}
 		return true;
 	}
-	
+
 	/**
 	 * Resets the board back to the starting position
 	 */
@@ -164,28 +228,40 @@ public class TicTacToe extends Application{
 		}
 	}
 	public void showRestart(Stage primaryStage) {
+
 		Button mainMenuButton = new Button("Main Menu");
 		Button restartButton = new Button("Restart");
 		Button exitButton = new Button("Exit");
-		
-		mainMenuButton.setOnAction(e ->{
+
+
+		mainMenuButton.setOnAction(e -> {
 			resetBoard();
-			showMainMenu(primaryStage);
+			showMainMenu(primaryStage); // back to main menu
 		});
-		
-		restartButton.setOnAction(e ->{
+
+		restartButton.setOnAction(e -> {
 			resetBoard();
 			startGame(primaryStage);
 		});
-		
-		
-		exitButton.setOnAction(e ->{
+
+		exitButton.setOnAction(e -> {
 			primaryStage.close();
 		});
-		gridPane.setAlignment(Pos.CENTER);
-		layout1.getChildren().addAll(mainMenuButton, restartButton, exitButton);
-//		game.setLeft(layout1);
-//		primaryStage.setScene(gameScene);
+
+		// bigger font, not touching the wall
+		mainMenuButton.setStyle("-fx-font-size: 20px; -fx-padding: 10px 20px; -fx-pref-width: 250px; -fx-pref-height: 100px;");
+		restartButton.setStyle("-fx-font-size: 20px; -fx-padding: 10px 20px; -fx-pref-width: 250px;-fx-pref-height: 100px;");
+		exitButton.setStyle("-fx-font-size: 20px; -fx-padding: 10px 20px; -fx-pref-width: 250px;-fx-pref-height: 100px;");
+		
+		
+
+		// add buttons to the left side
+		buttonBox.getChildren().clear(); // makes sure it doesnt overflow if the method is called multiple times
+		buttonBox.getChildren().addAll(mainMenuButton, restartButton, exitButton);
+		buttonBox.setAlignment(Pos.CENTER_LEFT);
+		buttonBox.setSpacing(100); // add spacing between buttons
+		buttonBox.setStyle("-fx-padding: 30px;"); // add spacing from the side
+
 	}
 	
 	
