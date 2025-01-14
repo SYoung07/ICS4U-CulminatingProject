@@ -23,8 +23,10 @@ public class TicTacToe extends Application{
 	private VBox buttonBox = new VBox(10);
 	private int player1Score = 0;
 	private int player2Score = 0;
+	private int draws = 0;
 	private Label player1ScoreLabel = new Label("Player 1: " + player1Score);
 	private Label player2ScoreLabel = new Label("Player 2: " + player2Score);
+	private Label drawsLabel = new Label("Draws:" + draws);
 	private boolean gameOver;
 	@Override
 	public void start(Stage primaryStage) throws Exception {
@@ -32,7 +34,7 @@ public class TicTacToe extends Application{
 		showMainMenu(primaryStage);
 
 
-		
+
 	}
 
 	private void showMainMenu(Stage primaryStage) {
@@ -95,35 +97,41 @@ public class TicTacToe extends Application{
 		// reserve space for the button box on the left to prevent it from moving the board when shown later
 		buttonBox.setAlignment(Pos.CENTER_LEFT);
 		buttonBox.setStyle("-fx-padding: 10;"); // spacing from the wall
-		buttonBox.setPrefWidth(200); // reserve space on the left
+		buttonBox.setPrefWidth(250); // reserve space on the left
 		buttonBox.getChildren().clear(); // empty the left side 
 
 		// this allows the board to be in the exact center of the screen since there is now a 200 px reserve on both sides from the buttonBox and this spacer
 		VBox spacer = new VBox(10);
-		buttonBox.setAlignment(Pos.CENTER_RIGHT);
-		spacer.setPrefWidth(200);
+		spacer.setAlignment(Pos.CENTER_RIGHT);
+		spacer.setPrefWidth(250);
 		spacer.setStyle("-fx-padding: 10;"); // spacing from the wall
 		spacer.getChildren().clear(); // empty the right side 
-		// Add score labels at the top
-		Label scoreText = new Label("SCORE");
-		player1ScoreLabel.setStyle("-fx-font-size: 25px;");
-		player2ScoreLabel.setStyle("-fx-font-size: 25px;");
-		scoreText.setStyle("-fx-font-size: 25px;");
-		HBox scoreBox = new HBox(10, player1ScoreLabel, scoreText, player2ScoreLabel);
+		// add score labels at the top and change the colours of them
+		Label scoreText = new Label("SCORES");
+		player1ScoreLabel.setStyle("-fx-font-size: 35px; -fx-text-fill: blue;");
+		player2ScoreLabel.setStyle("-fx-font-size: 35px; -fx-text-fill: red;");
+		scoreText.setStyle("-fx-font-size: 35px; -fx-text-fill: black;");
+		drawsLabel.setStyle("-fx-font-size: 35px; -fx-text-fill: gray;");
+
+		HBox scoreBox = new HBox(100, player1ScoreLabel, drawsLabel, player2ScoreLabel);
 		scoreBox.setAlignment(Pos.TOP_CENTER);
-		scoreBox.setStyle("-fx-padding: 10; -fx-font-size: 20px;");
+		scoreText.setAlignment(Pos.TOP_CENTER);
+		scoreBox.setStyle("-fx-font-size: 35px;");
 
-
-		VBox centerLayout = new VBox(scoreBox, gridPane, statusLabel);
+		// this is to have the SCORE text along with player score aligned at the top
+		VBox scoreLayout = new VBox(scoreText, scoreBox);
+		scoreLayout.setAlignment(Pos.CENTER);
+		VBox centerLayout = new VBox(gridPane, statusLabel);
 
 		centerLayout.setAlignment(Pos.CENTER);
 
-		gameLayout.setTop(scoreBox);
+		// adds all VBox's/HBox's to a BorderPane for organization
+		gameLayout.setTop(scoreLayout);
 		gameLayout.setCenter(centerLayout);
 		gameLayout.setLeft(buttonBox);
 		gameLayout.setRight(spacer);
-		Scene gameScene = new Scene(gameLayout);
 
+		Scene gameScene = new Scene(gameLayout);
 		primaryStage.setScene(gameScene);
 		primaryStage.setMaximized(false);
 		primaryStage.setMaximized(true);
@@ -138,10 +146,12 @@ public class TicTacToe extends Application{
 			// if its player 1's turn
 			if(player1Turn) {
 				currentPlayer = 'X';
+				square.setStyle("-fx-text-fill: blue;");  // set the color for X to blue
 			} else { // player 2's turn
 				currentPlayer = 'O';
+				square.setStyle("-fx-text-fill: red;");   // set the color for O to red
 			}
-			
+
 			// adds the move to the 2d array which will be used to check who wins later
 			board[row][column] = currentPlayer;
 			// changes the visible grid to the player move
@@ -164,6 +174,9 @@ public class TicTacToe extends Application{
 				showRestart(primaryStage);
 			} else if(isBoardFull()) {
 				statusLabel.setText("It's a Draw!");
+				draws++;
+				drawsLabel.setText("Draws: " + draws);
+				gameOver = true;
 				showRestart(primaryStage);
 
 			} else { // if there isnt any wins/draws continue and display whos turn it is
@@ -236,16 +249,18 @@ public class TicTacToe extends Application{
 		});
 
 		// bigger font, not touching the wall
-		mainMenuButton.setStyle("-fx-font-size: 20px; -fx-padding: 10px 20px;");
-		restartButton.setStyle("-fx-font-size: 20px; -fx-padding: 10px 20px;");
-		exitButton.setStyle("-fx-font-size: 20px; -fx-padding: 10px 20px;");
+		mainMenuButton.setStyle("-fx-font-size: 20px; -fx-padding: 10px 20px; -fx-pref-width: 250px; -fx-pref-height: 100px;");
+		restartButton.setStyle("-fx-font-size: 20px; -fx-padding: 10px 20px; -fx-pref-width: 250px;-fx-pref-height: 100px;");
+		exitButton.setStyle("-fx-font-size: 20px; -fx-padding: 10px 20px; -fx-pref-width: 250px;-fx-pref-height: 100px;");
+		
+		
 
 		// add buttons to the left side
 		buttonBox.getChildren().clear(); // makes sure it doesnt overflow if the method is called multiple times
 		buttonBox.getChildren().addAll(mainMenuButton, restartButton, exitButton);
-		buttonBox.setAlignment(Pos.TOP_CENTER);
-		buttonBox.setSpacing(20); // add spacing between buttons
-		buttonBox.setStyle("-fx-padding: 20px;"); // add spacing from the side
+		buttonBox.setAlignment(Pos.CENTER_LEFT);
+		buttonBox.setSpacing(100); // add spacing between buttons
+		buttonBox.setStyle("-fx-padding: 30px;"); // add spacing from the side
 
 	}
 
