@@ -1,6 +1,5 @@
 package game;
 
-
 import javafx.application.Application;
 import javafx.geometry.Pos;
 import javafx.scene.Scene;
@@ -11,6 +10,8 @@ import javafx.scene.layout.GridPane;
 import javafx.scene.layout.HBox;
 import javafx.scene.layout.VBox;
 import javafx.scene.shape.Line;
+import javafx.scene.media.Media;
+import javafx.scene.media.MediaPlayer;
 import javafx.stage.Stage;
 
 public class TicTacToe extends Application{
@@ -42,6 +43,13 @@ public class TicTacToe extends Application{
 		Label titleLabel = new Label("Select Game Mode");
 		Button singlePlayerButton = new Button("Single Player");
 		Button twoPlayerButton = new Button("Two Player");
+//		Media media = new Media("file:src/game/MenuMusic.mp3");  
+//      MediaPlayer mediaPlayer = new MediaPlayer(media); 
+        
+        
+        
+//		mediaPlayer.setAutoPlay(true);  
+        primaryStage.setTitle("Main Menu");  
 
 		singlePlayerButton.setOnAction(e -> {
 			gameMode = "singlePlayer";
@@ -294,9 +302,6 @@ public class TicTacToe extends Application{
 		}
 		
 	}
-
-
-
 
 
 	public static void main(String[] args) {
