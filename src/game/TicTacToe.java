@@ -10,6 +10,7 @@ import javafx.scene.layout.BorderPane;
 import javafx.scene.layout.GridPane;
 import javafx.scene.layout.HBox;
 import javafx.scene.layout.VBox;
+import javafx.scene.shape.Line;
 import javafx.stage.Stage;
 
 public class TicTacToe extends Application{
@@ -89,7 +90,6 @@ public class TicTacToe extends Application{
 					}
 				});
 				gridPane.add(square, row, column);
-
 			}
 
 		}
@@ -193,17 +193,28 @@ public class TicTacToe extends Application{
 	public boolean checkWin(char player) {
 
 		for (int i = 0; i<3; i++) {
+
 			// rows
-			if(board[i][0] == player && board[i][1] == player && board [i][2] == player ) return true;
+			if(board[0][i] == player && board[1][i] == player && board [2][i] == player ) {
+				drawWinningLine(i,-1);
+				return true;
+			}
 			// columns
-			if(board[0][i] == player && board[1][i] == player && board [2][i] == player ) return true;
+			if(board[i][0] == player && board[i][1] == player && board [i][2] == player ) {
+				drawWinningLine(-1,0);
+				return true;
+			}
+			// 0,0  0,1
+
+			// diagonal
+			if(board[0][0] == player && board[1][1] == player && board[2][2] == player) {
+				return true;
+			}
+			if(board[0][2] == player && board[1][1] == player && board[2][0] == player) {
+				return true;
+			}
 		}
-		// diagonal
-		if(board[0][0] == player && board[1][1] == player && board[2][2] == player) return true;
-		if(board[0][2] == player && board[1][1] == player && board[2][0] == player) return true;
-
 		return false;
-
 	}
 	public boolean isBoardFull() {
 		// checks the entire board for any empty square, returns false if it finds one
@@ -252,8 +263,8 @@ public class TicTacToe extends Application{
 		mainMenuButton.setStyle("-fx-font-size: 20px; -fx-padding: 10px 20px; -fx-pref-width: 250px; -fx-pref-height: 100px;");
 		restartButton.setStyle("-fx-font-size: 20px; -fx-padding: 10px 20px; -fx-pref-width: 250px;-fx-pref-height: 100px;");
 		exitButton.setStyle("-fx-font-size: 20px; -fx-padding: 10px 20px; -fx-pref-width: 250px;-fx-pref-height: 100px;");
-		
-		
+
+
 
 		// add buttons to the left side
 		buttonBox.getChildren().clear(); // makes sure it doesnt overflow if the method is called multiple times
@@ -262,6 +273,26 @@ public class TicTacToe extends Application{
 		buttonBox.setSpacing(100); // add spacing between buttons
 		buttonBox.setStyle("-fx-padding: 30px;"); // add spacing from the side
 
+	}
+	public void drawWinningLine(int row, int column) {
+
+
+		if(row == 0) {
+			Line line = new Line(500, 290, 1425, 290);
+			line.setStrokeWidth(10);
+			gameLayout.getChildren().add(line);			
+		}
+		if(row == 1) {
+			Line line = new Line(00, 540, 10000, 540);
+			line.setStrokeWidth(10);
+			gameLayout.getChildren().add(line);			
+		}
+		if(row == 2) {
+			Line line = new Line(00, 770, 10000, 790);
+			line.setStrokeWidth(10);
+			gameLayout.getChildren().add(line);			
+		}
+		
 	}
 
 
