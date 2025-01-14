@@ -141,6 +141,7 @@ public class TicTacToe extends Application{
 			} else { // player 2's turn
 				currentPlayer = 'O';
 			}
+			
 			// adds the move to the 2d array which will be used to check who wins later
 			board[row][column] = currentPlayer;
 			// changes the visible grid to the player move
