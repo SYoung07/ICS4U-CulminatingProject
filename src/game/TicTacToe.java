@@ -277,7 +277,7 @@ public class TicTacToe extends Application{
 			}
 		}
 	}
-
+	
 	public boolean checkWin(char player) {
 
 		for (int i = 0; i<3; i++) {
@@ -315,7 +315,7 @@ public class TicTacToe extends Application{
 		}
 		return true;
 	}
-
+	
 	/**
 	 * Resets the board back to the starting position
 	 */
@@ -327,33 +327,33 @@ public class TicTacToe extends Application{
 		}
 	}
 	public void showRestart(Stage primaryStage) {
-
+		
 		Button mainMenuButton = new Button("Main Menu");
 		Button restartButton = new Button("Restart");
 		Button exitButton = new Button("Exit");
-
-
+		
+		
 		mainMenuButton.setOnAction(e -> {
 			resetBoard();
 			showMainMenu(primaryStage); // back to main menu
 		});
-
+		
 		restartButton.setOnAction(e -> {
 			resetBoard();
 			startGame(primaryStage);
 		});
-
+		
 		exitButton.setOnAction(e -> {
 			primaryStage.close();
 		});
-
+		
 		// bigger font, not touching the wall
 		mainMenuButton.setStyle("-fx-font-size: 20px; -fx-padding: 10px 20px; -fx-pref-width: 250px; -fx-pref-height: 100px;");
 		restartButton.setStyle("-fx-font-size: 20px; -fx-padding: 10px 20px; -fx-pref-width: 250px;-fx-pref-height: 100px;");
 		exitButton.setStyle("-fx-font-size: 20px; -fx-padding: 10px 20px; -fx-pref-width: 250px;-fx-pref-height: 100px;");
-
-
-
+		
+		
+		
 		// add buttons to the left side
 		buttonBox.getChildren().clear(); // makes sure it doesnt overflow if the method is called multiple times
 		buttonBox.getChildren().addAll(mainMenuButton, restartButton, exitButton);
@@ -383,7 +383,6 @@ public class TicTacToe extends Application{
 		}
 		
 	}
-
 
 	public static void main(String[] args) {
 		launch(args);
