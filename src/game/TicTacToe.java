@@ -99,7 +99,7 @@ public class TicTacToe extends Application{
 		easyModeButton.setStyle("-fx-font-size: 20px; -fx-padding: 10px 20px; -fx-pref-width: 250px; -fx-pref-height: 100px;");
 		hardModeButton.setStyle("-fx-font-size: 20px; -fx-padding: 10px 20px; -fx-pref-width: 250px; -fx-pref-height: 100px;");
 		titleLabel.setStyle("-fx-font-size: 35px; -fx-text-fill: black;");
-		// add a (cracked?)line doown the center to seperate easy and hard modes with different backgrounds for each (damjan sketch) NATHANS JOB
+		// add a (cracked?)line down the center to separate easy and hard modes with different backgrounds for each (damjan sketch) NATHANS JOB
 		// maybe add a unique background for each side (damjan sketch) maybe nathans job if he can figure it out
 
 		Scene mainMenu = new Scene(screenLayout, 400, 300);
@@ -191,12 +191,8 @@ public class TicTacToe extends Application{
 			board[row][column] = 'X'; // player move is always X
 			square.setText("X");
 			square.setStyle("-fx-text-fill: blue;");
-//			player1Turn = false;
-			for (int i = 0; i<3; i++) {
-				for (int j = 0; j<3; j++) {
-					System.out.println(board[i][j]);
-				}
-			}
+			//			player1Turn = false;
+		
 			if (checkWin('X')) {
 				statusLabel.setText("Player Wins!");
 				player1Score++;
@@ -227,11 +223,13 @@ public class TicTacToe extends Application{
 		if (!gameOver) {
 			int row, col;
 			// keeps randomly choosing a row and column until it finds an empty square 
-			do {
+			while(true) {
 				row = (int) (Math.random() * 3);
 				col = (int) (Math.random() * 3);
-			} while (board[row][col] != ' ');
-
+				
+				if(board[row][col] == ' ') break;
+			}
+			
 			board[row][col] = 'O';
 			square.setText("O");
 			square.setStyle("-fx-text-fill: red;");
