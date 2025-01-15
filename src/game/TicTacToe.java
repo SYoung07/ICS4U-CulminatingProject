@@ -1,6 +1,5 @@
 package game;
 
-
 import javafx.application.Application;
 import javafx.geometry.Pos;
 import javafx.scene.Scene;
@@ -10,6 +9,9 @@ import javafx.scene.layout.BorderPane;
 import javafx.scene.layout.GridPane;
 import javafx.scene.layout.HBox;
 import javafx.scene.layout.VBox;
+import javafx.scene.shape.Line;
+import javafx.scene.media.Media;
+import javafx.scene.media.MediaPlayer;
 import javafx.stage.Stage;
 
 public class TicTacToe extends Application{
@@ -41,6 +43,13 @@ public class TicTacToe extends Application{
 		Label titleLabel = new Label("Select Game Mode");
 		Button singlePlayerButton = new Button("Single Player");
 		Button twoPlayerButton = new Button("Two Player");
+//		Media media = new Media("file:src/game/MenuMusic.mp3");  
+//      MediaPlayer mediaPlayer = new MediaPlayer(media); 
+        
+        
+        
+//		mediaPlayer.setAutoPlay(true);  
+        primaryStage.setTitle("Main Menu");  
 
 		singlePlayerButton.setOnAction(e -> {
 			showDifficultySelector(primaryStage);
@@ -124,7 +133,6 @@ public class TicTacToe extends Application{
 					}
 				});
 				gridPane.add(square, row, column);
-
 			}
 
 		}
@@ -273,17 +281,28 @@ public class TicTacToe extends Application{
 	public boolean checkWin(char player) {
 
 		for (int i = 0; i<3; i++) {
+
 			// rows
-			if(board[i][0] == player && board[i][1] == player && board [i][2] == player ) return true;
+			if(board[0][i] == player && board[1][i] == player && board [2][i] == player ) {
+				drawWinningLine(i,-1);
+				return true;
+			}
 			// columns
-			if(board[0][i] == player && board[1][i] == player && board [2][i] == player ) return true;
+			if(board[i][0] == player && board[i][1] == player && board [i][2] == player ) {
+				drawWinningLine(-1,0);
+				return true;
+			}
+			// 0,0  0,1
+
+			// diagonal
+			if(board[0][0] == player && board[1][1] == player && board[2][2] == player) {
+				return true;
+			}
+			if(board[0][2] == player && board[1][1] == player && board[2][0] == player) {
+				return true;
+			}
 		}
-		// diagonal
-		if(board[0][0] == player && board[1][1] == player && board[2][2] == player) return true;
-		if(board[0][2] == player && board[1][1] == player && board[2][0] == player) return true;
-
 		return false;
-
 	}
 	public boolean isBoardFull() {
 		// checks the entire board for any empty square, returns false if it finds one
@@ -342,6 +361,27 @@ public class TicTacToe extends Application{
 		buttonBox.setSpacing(100); // add spacing between buttons
 		buttonBox.setStyle("-fx-padding: 30px;"); // add spacing from the side
 
+	}
+	public void drawWinningLine(int row, int column) {
+
+
+
+		if(row == 0) {
+			Line line = new Line(500, 290, 1425, 290);
+			line.setStrokeWidth(10);
+			gameLayout.getChildren().add(line);			
+		}
+		if(row == 1) {
+			Line line = new Line(00, 540, 10000, 540);
+			line.setStrokeWidth(10);
+			gameLayout.getChildren().add(line);			
+		}
+		if(row == 2) {
+			Line line = new Line(00, 770, 10000, 790);
+			line.setStrokeWidth(10);
+			gameLayout.getChildren().add(line);			
+		}
+		
 	}
 
 
