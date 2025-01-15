@@ -43,8 +43,7 @@ public class TicTacToe extends Application{
 		Button twoPlayerButton = new Button("Two Player");
 
 		singlePlayerButton.setOnAction(e -> {
-			gameMode = "singlePlayer";
-			// choice between easy and hard. MAKE A NEW METHOD LATER
+			showDifficultySelector(primaryStage);
 		});
 		twoPlayerButton.setOnAction(e -> {
 			gameMode = "twoPlayer";
@@ -52,8 +51,10 @@ public class TicTacToe extends Application{
 		});
 		VBox modeSelection = new VBox(titleLabel, singlePlayerButton,twoPlayerButton);
 		modeSelection.setAlignment(Pos.CENTER);
+
 		Scene mainMenu = new Scene(modeSelection, 400, 300);
 		primaryStage.setScene(mainMenu);
+
 		primaryStage.setMaximized(false);
 		primaryStage.setMaximized(true);
 		primaryStage.show();
@@ -61,6 +62,40 @@ public class TicTacToe extends Application{
 	}
 
 
+
+	private void showDifficultySelector(Stage primaryStage) {
+		// create labels and buttons
+		Label titleLabel = new Label("Choose the Difficulty");
+		Button easyModeButton = new Button("Easy");
+		Button hardModeButton = new Button("Hard");
+
+		easyModeButton.setOnAction(e -> {
+			gameMode = "singlePlayerEasy";
+			startGame(primaryStage);
+		});
+		hardModeButton.setOnAction(e -> {
+			gameMode = "singlePlayerHard";
+			startGame(primaryStage);
+		});
+		HBox buttonBox = new HBox(600, easyModeButton, hardModeButton);
+		buttonBox.setAlignment(Pos.CENTER);
+		VBox screenLayout = new VBox(500, titleLabel, buttonBox);
+		screenLayout.setAlignment(Pos.TOP_CENTER);
+
+		// making text/buttons bigger
+		easyModeButton.setStyle("-fx-font-size: 20px; -fx-padding: 10px 20px; -fx-pref-width: 250px; -fx-pref-height: 100px;");
+		hardModeButton.setStyle("-fx-font-size: 20px; -fx-padding: 10px 20px; -fx-pref-width: 250px; -fx-pref-height: 100px;");
+		titleLabel.setStyle("-fx-font-size: 35px; -fx-text-fill: black;");
+		// add a (cracked?)line doown the center to seperate easy and hard modes with different backgrounds for each (damjan sketch) NATHANS JOB
+		// maybe add a unique background for each side (damjan sketch) maybe nathans job if he can figure it out
+
+		Scene mainMenu = new Scene(screenLayout, 400, 300);
+		primaryStage.setScene(mainMenu);
+
+		primaryStage.setMaximized(false);
+		primaryStage.setMaximized(true);
+		primaryStage.show();
+	}
 
 	private void startGame(Stage primaryStage) {
 		// reset to player 1's turn
@@ -85,7 +120,7 @@ public class TicTacToe extends Application{
 					if(gameMode.equals("twoPlayer")) {
 						twoPlayerMove(square, row, column, primaryStage);
 					}else {
-						// single player move
+						singlePlayerMove(square,row,column,primaryStage);
 					}
 				});
 				gridPane.add(square, row, column);
@@ -137,6 +172,51 @@ public class TicTacToe extends Application{
 		primaryStage.setMaximized(true);
 
 
+	}
+
+	public void singlePlayerMove(Button square, int row, int column, Stage primaryStage) {	
+		if (board[row][column] == ' ' && !gameOver) {
+			board[row][column] = 'X'; // player move is always X
+			square.setText("X");
+			square.setStyle("-fx-text-fill: blue;");
+
+			if (checkWin('X')) {
+				statusLabel.setText("Player Wins!");
+				player1Score++;
+				player1ScoreLabel.setText("Player 1: " + player1Score);
+				gameOver = true;
+				showRestart(primaryStage);
+				return;  // exits the method early to not run the computers turn
+			} else if (isBoardFull()) {
+				statusLabel.setText("It's a Draw!");
+				draws++;
+				drawsLabel.setText("Draws: " + draws);
+				gameOver = true;
+				showRestart(primaryStage);
+				return; // exits the method early to not run the computers turn
+			}
+
+			// computer's turn
+			if (gameMode.equals("singlePlayerEasy")) {
+				easyComputerMove(primaryStage);
+			} else if (gameMode.equals("singlePlayerHard")) {
+				// hardComputerMove(primaryStage);
+			}
+		}
+
+	}
+
+
+	private void easyComputerMove(Stage primaryStage) {
+		if (!gameOver) {
+	        int row, col;
+	        // keeps randomly choosing a row and column until it finds an empty square 
+	        do {
+	            row = (int) (Math.random() * 3);
+	            col = (int) (Math.random() * 3);
+	        } while (board[row][col] != ' ');
+	        // CONTINUE FROM HERE
+		}
 	}
 
 	public void twoPlayerMove(Button square, int row, int column, Stage primaryStage) {
@@ -252,8 +332,8 @@ public class TicTacToe extends Application{
 		mainMenuButton.setStyle("-fx-font-size: 20px; -fx-padding: 10px 20px; -fx-pref-width: 250px; -fx-pref-height: 100px;");
 		restartButton.setStyle("-fx-font-size: 20px; -fx-padding: 10px 20px; -fx-pref-width: 250px;-fx-pref-height: 100px;");
 		exitButton.setStyle("-fx-font-size: 20px; -fx-padding: 10px 20px; -fx-pref-width: 250px;-fx-pref-height: 100px;");
-		
-		
+
+
 
 		// add buttons to the left side
 		buttonBox.getChildren().clear(); // makes sure it doesnt overflow if the method is called multiple times
