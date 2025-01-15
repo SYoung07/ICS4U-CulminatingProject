@@ -43,6 +43,10 @@ public class TicTacToe extends Application{
 		Label titleLabel = new Label("Select Game Mode");
 		Button singlePlayerButton = new Button("Single Player");
 		Button twoPlayerButton = new Button("Two Player");
+		singlePlayerButton.setStyle("-fx-font-size: 20px; -fx-padding: 10px 20px; -fx-pref-width: 250px; -fx-pref-height: 100px;");
+		twoPlayerButton.setStyle("-fx-font-size: 20px; -fx-padding: 10px 20px; -fx-pref-width: 250px; -fx-pref-height: 100px;");
+		titleLabel.setStyle("-fx-font-size: 35px; -fx-text-fill: black;");
+		
 //		Media media = new Media("file:src/game/MenuMusic.mp3");  
 //      MediaPlayer mediaPlayer = new MediaPlayer(media); 
         
@@ -58,7 +62,7 @@ public class TicTacToe extends Application{
 			gameMode = "twoPlayer";
 			startGame(primaryStage);
 		});
-		VBox modeSelection = new VBox(titleLabel, singlePlayerButton,twoPlayerButton);
+		VBox modeSelection = new VBox(30, titleLabel, singlePlayerButton,twoPlayerButton);
 		modeSelection.setAlignment(Pos.CENTER);
 
 		Scene mainMenu = new Scene(modeSelection, 400, 300);
@@ -206,7 +210,7 @@ public class TicTacToe extends Application{
 
 			// computer's turn
 			if (gameMode.equals("singlePlayerEasy")) {
-				easyComputerMove(primaryStage);
+				easyComputerMove(square, primaryStage);
 			} else if (gameMode.equals("singlePlayerHard")) {
 				// hardComputerMove(primaryStage);
 			}
@@ -215,7 +219,7 @@ public class TicTacToe extends Application{
 	}
 
 
-	private void easyComputerMove(Stage primaryStage) {
+	private void easyComputerMove(Button square, Stage primaryStage) {
 		if (!gameOver) {
 	        int row, col;
 	        // keeps randomly choosing a row and column until it finds an empty square 
@@ -223,7 +227,28 @@ public class TicTacToe extends Application{
 	            row = (int) (Math.random() * 3);
 	            col = (int) (Math.random() * 3);
 	        } while (board[row][col] != ' ');
-	        // CONTINUE FROM HERE
+	        
+	        board[row][col] = 'O';
+	        square.setText("O");
+            square.setStyle("-fx-text-fill: red;");
+            // ISNT SWAPPING X's AND O's FIX
+            if(checkWin('O')) {
+            	statusLabel.setText("Player 2 (Computer) Wins!");
+				// updates score
+				player1Score++;
+				player1ScoreLabel.setText("Player 2 (Computer): " + player2Score);
+				gameOver = true;
+            } else if (isBoardFull()) {
+                statusLabel.setText("It's a Draw!");
+                draws++;
+                drawsLabel.setText("Draws: " + draws);
+                gameOver = true;
+                showRestart(primaryStage);
+            }  else {
+                statusLabel.setText("Player's Turn (X)");
+            }
+	        
+	     
 		}
 	}
 
