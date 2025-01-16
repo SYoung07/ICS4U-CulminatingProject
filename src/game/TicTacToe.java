@@ -1,5 +1,7 @@
 package game;
 
+import java.io.File;
+
 import javafx.application.Application;
 import javafx.geometry.Pos;
 import javafx.scene.Scene;
@@ -9,9 +11,9 @@ import javafx.scene.layout.BorderPane;
 import javafx.scene.layout.GridPane;
 import javafx.scene.layout.HBox;
 import javafx.scene.layout.VBox;
-import javafx.scene.shape.Line;
 import javafx.scene.media.Media;
 import javafx.scene.media.MediaPlayer;
+import javafx.scene.shape.Line;
 import javafx.stage.Stage;
 
 public class TicTacToe extends Application{
@@ -30,6 +32,7 @@ public class TicTacToe extends Application{
 	private Label player2ScoreLabel = new Label("Player 2: " + player2Score);
 	private Label drawsLabel = new Label("Draws:" + draws);
 	private boolean gameOver;
+	private MediaPlayer mediaPlayer;
 	@Override
 	public void start(Stage primaryStage) throws Exception {
 		resetBoard();
@@ -46,14 +49,17 @@ public class TicTacToe extends Application{
 		singlePlayerButton.setStyle("-fx-font-size: 20px; -fx-padding: 10px 20px; -fx-pref-width: 250px; -fx-pref-height: 100px;");
 		twoPlayerButton.setStyle("-fx-font-size: 20px; -fx-padding: 10px 20px; -fx-pref-width: 250px; -fx-pref-height: 100px;");
 		titleLabel.setStyle("-fx-font-size: 35px; -fx-text-fill: black;");
-		
-//		Media media = new Media("file:src/game/MenuMusic.mp3");  
-//      MediaPlayer mediaPlayer = new MediaPlayer(media); 
-        
-        
-        
-//		mediaPlayer.setAutoPlay(true);  
-        primaryStage.setTitle("Main Menu");  
+
+
+		try {
+		Media media = new Media(new File("src/game/MenuMusic.mp3").toURI().toString());
+		mediaPlayer = new MediaPlayer(media);
+		mediaPlayer.play();
+		} catch(Exception e) {
+			
+		}
+		// mediaPlayer.setAutoPlay(true);  
+		primaryStage.setTitle("Main Menu");  
 
 		singlePlayerButton.setOnAction(e -> {
 			showDifficultySelector(primaryStage);
@@ -221,34 +227,34 @@ public class TicTacToe extends Application{
 
 	private void easyComputerMove(Button square, Stage primaryStage) {
 		if (!gameOver) {
-	        int row, col;
-	        // keeps randomly choosing a row and column until it finds an empty square 
-	        do {
-	            row = (int) (Math.random() * 3);
-	            col = (int) (Math.random() * 3);
-	        } while (board[row][col] != ' ');
-	        
-	        board[row][col] = 'O';
-	        square.setText("O");
-            square.setStyle("-fx-text-fill: red;");
-            // ISNT SWAPPING X's AND O's FIX
-            if(checkWin('O')) {
-            	statusLabel.setText("Player 2 (Computer) Wins!");
+			int row, col;
+			// keeps randomly choosing a row and column until it finds an empty square 
+			do {
+				row = (int) (Math.random() * 3);
+				col = (int) (Math.random() * 3);
+			} while (board[row][col] != ' ');
+
+			board[row][col] = 'O';
+			square.setText("O");
+			square.setStyle("-fx-text-fill: red;");
+			// ISNT SWAPPING X's AND O's FIX
+			if(checkWin('O')) {
+				statusLabel.setText("Player 2 (Computer) Wins!");
 				// updates score
 				player1Score++;
 				player1ScoreLabel.setText("Player 2 (Computer): " + player2Score);
 				gameOver = true;
-            } else if (isBoardFull()) {
-                statusLabel.setText("It's a Draw!");
-                draws++;
-                drawsLabel.setText("Draws: " + draws);
-                gameOver = true;
-                showRestart(primaryStage);
-            }  else {
-                statusLabel.setText("Player's Turn (X)");
-            }
-	        
-	     
+			} else if (isBoardFull()) {
+				statusLabel.setText("It's a Draw!");
+				draws++;
+				drawsLabel.setText("Draws: " + draws);
+				gameOver = true;
+				showRestart(primaryStage);
+			}  else {
+				statusLabel.setText("Player's Turn (X)");
+			}
+
+
 		}
 	}
 
@@ -406,7 +412,7 @@ public class TicTacToe extends Application{
 			line.setStrokeWidth(10);
 			gameLayout.getChildren().add(line);			
 		}
-		
+
 	}
 
 
