@@ -53,16 +53,16 @@ public class TicTacToe extends Application{
 
 
 		try {
-		Media media = new Media(new File("src/game/MenuMusic.mp3").toURI().toString());
-		mediaPlayer = new MediaPlayer(media);
-		mediaPlayer.play();
+			Media media = new Media(new File("src/game/MenuMusic.mp3").toURI().toString());
+			mediaPlayer = new MediaPlayer(media);
+			mediaPlayer.play();
 		} catch(Exception e) {
-			
+
 		}  
 		primaryStage.setTitle("Main Menu");
 
 
-		
+
 		singlePlayerButton.setOnAction(e -> {
 			showDifficultySelector(primaryStage);
 		});
@@ -200,7 +200,7 @@ public class TicTacToe extends Application{
 			square.setText("X");
 			square.setStyle("-fx-text-fill: blue;");
 			//			player1Turn = false;
-		
+
 			if (checkWin('X')) {
 				statusLabel.setText("Player Wins!");
 				player1Score++;
@@ -231,7 +231,7 @@ public class TicTacToe extends Application{
 		if (!gameOver) {
 			int row, col;
 			// keeps randomly choosing a row and column until it finds an empty square 
-<<<<<<< HEAD
+
 			do {
 				row = (int) (Math.random() * 3);
 				col = (int) (Math.random() * 3);
@@ -240,19 +240,19 @@ public class TicTacToe extends Application{
 			board[row][col] = 'O';
 			square.setText("O");
 			square.setStyle("-fx-text-fill: red;");
-=======
+
 			while(true) {
 				row = (int) (Math.random() * 3);
 				col = (int) (Math.random() * 3);
-				
+
 				if(board[row][col] == ' ') break;
 			}
-			
+
 			board[row][col] = 'O';
 			square.setText("O");
 			square.setStyle("-fx-text-fill: red;");
 
->>>>>>> branch 'master' of https://github.com/SYoung07/ICS4U-CulminatingProject.git
+
 			// ISNT SWAPPING X's AND O's FIX
 			if(checkWin('O')) {
 				statusLabel.setText("Player 2 (Computer) Wins!");
@@ -267,17 +267,13 @@ public class TicTacToe extends Application{
 				gameOver = true;
 				showRestart(primaryStage);
 			}  else {
-<<<<<<< HEAD
+
 				statusLabel.setText("Player's Turn (X)");
 			}
-
-
-=======
-				statusLabel.setText("Player 1's Turn (X)");
-			}
->>>>>>> branch 'master' of https://github.com/SYoung07/ICS4U-CulminatingProject.git
 		}
+
 	}
+
 
 	public void twoPlayerMove(Button square, int row, int column, Stage primaryStage) {
 		// if the square is empty and the game isn't over
