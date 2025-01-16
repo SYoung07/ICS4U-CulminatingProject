@@ -62,6 +62,7 @@ public class TicTacToe extends Application{
 		primaryStage.setTitle("Main Menu");
 
 
+		
 		singlePlayerButton.setOnAction(e -> {
 			showDifficultySelector(primaryStage);
 		});
