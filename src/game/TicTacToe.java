@@ -51,15 +51,16 @@ public class TicTacToe extends Application{
 		titleLabel.setStyle("-fx-font-size: 35px; -fx-text-fill: black;");
 
 
+
 		try {
 		Media media = new Media(new File("src/game/MenuMusic.mp3").toURI().toString());
 		mediaPlayer = new MediaPlayer(media);
 		mediaPlayer.play();
 		} catch(Exception e) {
 			
-		}
-		// mediaPlayer.setAutoPlay(true);  
-		primaryStage.setTitle("Main Menu");  
+		}  
+		primaryStage.setTitle("Main Menu");
+
 
 		singlePlayerButton.setOnAction(e -> {
 			showDifficultySelector(primaryStage);
@@ -105,7 +106,7 @@ public class TicTacToe extends Application{
 		easyModeButton.setStyle("-fx-font-size: 20px; -fx-padding: 10px 20px; -fx-pref-width: 250px; -fx-pref-height: 100px;");
 		hardModeButton.setStyle("-fx-font-size: 20px; -fx-padding: 10px 20px; -fx-pref-width: 250px; -fx-pref-height: 100px;");
 		titleLabel.setStyle("-fx-font-size: 35px; -fx-text-fill: black;");
-		// add a (cracked?)line doown the center to seperate easy and hard modes with different backgrounds for each (damjan sketch) NATHANS JOB
+		// add a (cracked?)line down the center to separate easy and hard modes with different backgrounds for each (damjan sketch) NATHANS JOB
 		// maybe add a unique background for each side (damjan sketch) maybe nathans job if he can figure it out
 
 		Scene mainMenu = new Scene(screenLayout, 400, 300);
@@ -197,7 +198,8 @@ public class TicTacToe extends Application{
 			board[row][column] = 'X'; // player move is always X
 			square.setText("X");
 			square.setStyle("-fx-text-fill: blue;");
-
+			//			player1Turn = false;
+		
 			if (checkWin('X')) {
 				statusLabel.setText("Player Wins!");
 				player1Score++;
@@ -215,13 +217,12 @@ public class TicTacToe extends Application{
 			}
 
 			// computer's turn
-			if (gameMode.equals("singlePlayerEasy")) {
+			if (gameMode.equals("singlePlayerEasy")) {			
 				easyComputerMove(square, primaryStage);
 			} else if (gameMode.equals("singlePlayerHard")) {
 				// hardComputerMove(primaryStage);
 			}
 		}
-
 	}
 
 
@@ -229,6 +230,7 @@ public class TicTacToe extends Application{
 		if (!gameOver) {
 			int row, col;
 			// keeps randomly choosing a row and column until it finds an empty square 
+<<<<<<< HEAD
 			do {
 				row = (int) (Math.random() * 3);
 				col = (int) (Math.random() * 3);
@@ -237,12 +239,25 @@ public class TicTacToe extends Application{
 			board[row][col] = 'O';
 			square.setText("O");
 			square.setStyle("-fx-text-fill: red;");
+=======
+			while(true) {
+				row = (int) (Math.random() * 3);
+				col = (int) (Math.random() * 3);
+				
+				if(board[row][col] == ' ') break;
+			}
+			
+			board[row][col] = 'O';
+			square.setText("O");
+			square.setStyle("-fx-text-fill: red;");
+
+>>>>>>> branch 'master' of https://github.com/SYoung07/ICS4U-CulminatingProject.git
 			// ISNT SWAPPING X's AND O's FIX
 			if(checkWin('O')) {
 				statusLabel.setText("Player 2 (Computer) Wins!");
 				// updates score
-				player1Score++;
-				player1ScoreLabel.setText("Player 2 (Computer): " + player2Score);
+				player2Score++;
+				player2ScoreLabel.setText("Player 2 (Computer): " + player2Score);
 				gameOver = true;
 			} else if (isBoardFull()) {
 				statusLabel.setText("It's a Draw!");
@@ -251,10 +266,15 @@ public class TicTacToe extends Application{
 				gameOver = true;
 				showRestart(primaryStage);
 			}  else {
+<<<<<<< HEAD
 				statusLabel.setText("Player's Turn (X)");
 			}
 
 
+=======
+				statusLabel.setText("Player 1's Turn (X)");
+			}
+>>>>>>> branch 'master' of https://github.com/SYoung07/ICS4U-CulminatingProject.git
 		}
 	}
 
@@ -298,7 +318,7 @@ public class TicTacToe extends Application{
 				gameOver = true;
 				showRestart(primaryStage);
 
-			} else { // if there isnt any wins/draws continue and display whos turn it is
+			} else { // if there isn't any wins/draws continue and display whos turn it is
 				player1Turn =! player1Turn; // switches turns
 				if(player1Turn) {
 					statusLabel.setText("Player 1's Turn (X)");
@@ -386,7 +406,7 @@ public class TicTacToe extends Application{
 
 
 		// add buttons to the left side
-		buttonBox.getChildren().clear(); // makes sure it doesnt overflow if the method is called multiple times
+		buttonBox.getChildren().clear(); // makes sure it doesn't overflow if the method is called multiple times
 		buttonBox.getChildren().addAll(mainMenuButton, restartButton, exitButton);
 		buttonBox.setAlignment(Pos.CENTER_LEFT);
 		buttonBox.setSpacing(100); // add spacing between buttons
