@@ -16,6 +16,7 @@ import javafx.scene.media.MediaPlayer;
 import javafx.scene.shape.Line;
 import javafx.stage.Stage;
 
+
 public class TicTacToe extends Application{
 	// 2d array for the tictactoe board
 	private char[][] board = new char[3][3];
