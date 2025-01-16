@@ -32,10 +32,14 @@ public class TicTacToe extends Application{
 	private Label player2ScoreLabel = new Label("Player 2: " + player2Score);
 	private Label drawsLabel = new Label("Draws:" + draws);
 	private boolean gameOver;
+<<<<<<< HEAD
 	Media themeMusic;
 
 
 
+=======
+	private MediaPlayer mediaPlayer;
+>>>>>>> branch 'master' of https://github.com/SYoung07/ICS4U-CulminatingProject.git
 	@Override
 	public void start(Stage primaryStage) throws Exception {
 		resetBoard();
@@ -51,13 +55,29 @@ public class TicTacToe extends Application{
 		twoPlayerButton.setStyle("-fx-font-size: 20px; -fx-padding: 10px 20px; -fx-pref-width: 250px; -fx-pref-height: 100px;");
 		titleLabel.setStyle("-fx-font-size: 35px; -fx-text-fill: black;");
 
+<<<<<<< HEAD
 		File f = new File("src/game/MenuMusic.mp3");
 		themeMusic = new Media(f.toURI().toString());
 		MediaPlayer mediaPlayer = new MediaPlayer(themeMusic); 
 		mediaPlayer.setAutoPlay(true);  
 		primaryStage.setTitle("Main Menu");
-		
 
+		try {
+		Media media = new Media(new File("src/game/MenuMusic.mp3").toURI().toString());
+		mediaPlayer = new MediaPlayer(media);
+		mediaPlayer.play();
+		} catch(Exception e) {
+			
+		}  
+		primaryStage.setTitle("Main Menu");
+
+
+>>>>>>> branch 'master' of https://github.com/SYoung07/ICS4U-CulminatingProject.git
+		
+<<<<<<< HEAD
+
+=======
+>>>>>>> branch 'master' of https://github.com/SYoung07/ICS4U-CulminatingProject.git
 		singlePlayerButton.setOnAction(e -> {
 			showDifficultySelector(primaryStage);
 		});
@@ -226,6 +246,16 @@ public class TicTacToe extends Application{
 		if (!gameOver) {
 			int row, col;
 			// keeps randomly choosing a row and column until it finds an empty square 
+<<<<<<< HEAD
+			do {
+				row = (int) (Math.random() * 3);
+				col = (int) (Math.random() * 3);
+			} while (board[row][col] != ' ');
+
+			board[row][col] = 'O';
+			square.setText("O");
+			square.setStyle("-fx-text-fill: red;");
+=======
 			while(true) {
 				row = (int) (Math.random() * 3);
 				col = (int) (Math.random() * 3);
@@ -237,6 +267,7 @@ public class TicTacToe extends Application{
 			square.setText("O");
 			square.setStyle("-fx-text-fill: red;");
 
+>>>>>>> branch 'master' of https://github.com/SYoung07/ICS4U-CulminatingProject.git
 			// ISNT SWAPPING X's AND O's FIX
 			if(checkWin('O')) {
 				statusLabel.setText("Player 2 (Computer) Wins!");
@@ -251,8 +282,15 @@ public class TicTacToe extends Application{
 				gameOver = true;
 				showRestart(primaryStage);
 			}  else {
+<<<<<<< HEAD
+				statusLabel.setText("Player's Turn (X)");
+			}
+
+
+=======
 				statusLabel.setText("Player 1's Turn (X)");
 			}
+>>>>>>> branch 'master' of https://github.com/SYoung07/ICS4U-CulminatingProject.git
 		}
 	}
 
