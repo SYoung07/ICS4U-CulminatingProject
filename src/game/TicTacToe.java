@@ -130,23 +130,42 @@ public class TicTacToe extends Application{
 		gridPane.setGridLinesVisible(true);
 		gridPane.setStyle("-fx-font-size: 75px;"); // makes the text of the grid bigger (the X's and O's)
 		statusLabel.setStyle("-fx-font-size: 25px;"); // makes the text of the statusLabel bigger
+		
+		try {
+			Media media = new Media(new File("src/game/CartoonClickSound.mp3").toURI().toString());
+			mediaPlayer = new MediaPlayer(media);
+			mediaPlayer.play();
+		} catch(Exception e) {
+			
+		}
+
+		
 		for (int i = 0; i<3; i++) {
 			for (int j = 0; j<3; j++) {
 				Button square = new Button();
 				square.setPrefSize(250, 250);
 				int row = i;
 				int column = j;
-
+				try {
 				square.setOnAction(e ->{
 					if(gameMode.equals("twoPlayer")) {
 						twoPlayerMove(square, row, column, primaryStage);
+						
+							Media media = new Media(new File("src/game/CartoonClickSound.mp3").toURI().toString());
+							mediaPlayer = new MediaPlayer(media);
+							mediaPlayer.play();
 					}else {
 						singlePlayerMove(square,row,column,primaryStage);
+						Media media = new Media(new File("src/game/CartoonClickSound.mp3").toURI().toString());
+						mediaPlayer = new MediaPlayer(media);
+						mediaPlayer.play();
 					}
 				});
+				} catch (Exception e) {
+					
+				}
 				gridPane.add(square, row, column);
 			}
-
 		}
 
 		// reserve space for the button box on the left to prevent it from moving the board when shown later
