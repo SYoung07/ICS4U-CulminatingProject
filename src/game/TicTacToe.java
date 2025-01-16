@@ -16,6 +16,7 @@ import javafx.scene.media.MediaPlayer;
 import javafx.scene.shape.Line;
 import javafx.stage.Stage;
 
+
 public class TicTacToe extends Application{
 	// 2d array for the tictactoe board
 	private char[][] board = new char[3][3];
@@ -131,6 +132,10 @@ public class TicTacToe extends Application{
 		gridPane.setStyle("-fx-font-size: 75px;"); // makes the text of the grid bigger (the X's and O's)
 		statusLabel.setStyle("-fx-font-size: 25px;"); // makes the text of the statusLabel bigger
 		
+
+		
+
+		
 		// creates the buttons
 		for (int i = 0; i<3; i++) {
 			for (int j = 0; j<3; j++) {
@@ -138,20 +143,32 @@ public class TicTacToe extends Application{
 				square.setPrefSize(250, 250);
 				int row = i;
 				int column = j;
+
 				
+
+				try {
 				square.setOnAction(e ->{
 					if(gameMode.equals("twoPlayer")) {
 						twoPlayerMove(square, row, column, primaryStage);
 						System.out.println(gridPane.getRowIndex(square) + " " + gridPane.getColumnIndex(square));
+						
+							Media media = new Media(new File("src/game/CartoonClickSound.mp3").toURI().toString());
+							mediaPlayer = new MediaPlayer(media);
+							mediaPlayer.play();
 					}else {
 						singlePlayerMove(square,row,column,primaryStage);
+						Media media = new Media(new File("src/game/CartoonClickSound.mp3").toURI().toString());
+						mediaPlayer = new MediaPlayer(media);
+						mediaPlayer.play();
 					}
 				});
+				} catch (Exception e) {
+					
+				}
 				gridPane.add(square, row, column);
 //				gridPane.add(square, column, row);
 				
 			}
-
 		}
 
 		// reserve space for the button box on the left to prevent it from moving the board when shown later
@@ -419,12 +436,12 @@ public class TicTacToe extends Application{
 			gameLayout.getChildren().add(line);			
 		}
 		if(row == 1) {
-			Line line = new Line(00, 540, 10000, 540);
+			Line line = new Line(500, 540, 1425, 540);
 			line.setStrokeWidth(10);
 			gameLayout.getChildren().add(line);			
 		}
 		if(row == 2) {
-			Line line = new Line(00, 770, 10000, 790);
+			Line line = new Line(500, 790, 1425, 790);
 			line.setStrokeWidth(10);
 			gameLayout.getChildren().add(line);			
 		}
