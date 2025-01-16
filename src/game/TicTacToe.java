@@ -1,5 +1,7 @@
 package game;
 
+import java.io.File;
+
 import javafx.application.Application;
 import javafx.geometry.Pos;
 import javafx.scene.Scene;
@@ -9,9 +11,9 @@ import javafx.scene.layout.BorderPane;
 import javafx.scene.layout.GridPane;
 import javafx.scene.layout.HBox;
 import javafx.scene.layout.VBox;
-import javafx.scene.shape.Line;
 import javafx.scene.media.Media;
 import javafx.scene.media.MediaPlayer;
+import javafx.scene.shape.Line;
 import javafx.stage.Stage;
 
 public class TicTacToe extends Application{
@@ -30,12 +32,14 @@ public class TicTacToe extends Application{
 	private Label player2ScoreLabel = new Label("Player 2: " + player2Score);
 	private Label drawsLabel = new Label("Draws:" + draws);
 	private boolean gameOver;
+	Media themeMusic;
+
+
+
 	@Override
 	public void start(Stage primaryStage) throws Exception {
 		resetBoard();
 		showMainMenu(primaryStage);
-
-
 
 	}
 
@@ -47,21 +51,12 @@ public class TicTacToe extends Application{
 		twoPlayerButton.setStyle("-fx-font-size: 20px; -fx-padding: 10px 20px; -fx-pref-width: 250px; -fx-pref-height: 100px;");
 		titleLabel.setStyle("-fx-font-size: 35px; -fx-text-fill: black;");
 
+		File f = new File("src/game/MenuMusic.mp3");
+		themeMusic = new Media(f.toURI().toString());
+		MediaPlayer mediaPlayer = new MediaPlayer(themeMusic); 
+		mediaPlayer.setAutoPlay(true);  
+		primaryStage.setTitle("Main Menu");
 		
-//		Media media = new Media("file:src/game/MenuMusic.mp3");  
-//      MediaPlayer mediaPlayer = new MediaPlayer(media); 
-//		mediaPlayer.setAutoPlay(true);  
-        primaryStage.setTitle("Main Menu");  
-
-
-		//		Media media = new Media("file:src/game/MenuMusic.mp3");  
-		//      MediaPlayer mediaPlayer = new MediaPlayer(media); 
-
-
-
-		//		mediaPlayer.setAutoPlay(true);  
-		primaryStage.setTitle("Main Menu");  
-
 
 		singlePlayerButton.setOnAction(e -> {
 			showDifficultySelector(primaryStage);
@@ -200,7 +195,7 @@ public class TicTacToe extends Application{
 			square.setText("X");
 			square.setStyle("-fx-text-fill: blue;");
 			//			player1Turn = false;
-		
+
 			if (checkWin('X')) {
 				statusLabel.setText("Player Wins!");
 				player1Score++;
@@ -234,10 +229,10 @@ public class TicTacToe extends Application{
 			while(true) {
 				row = (int) (Math.random() * 3);
 				col = (int) (Math.random() * 3);
-				
+
 				if(board[row][col] == ' ') break;
 			}
-			
+
 			board[row][col] = 'O';
 			square.setText("O");
 			square.setStyle("-fx-text-fill: red;");
@@ -311,7 +306,7 @@ public class TicTacToe extends Application{
 			}
 		}
 	}
-	
+
 	public boolean checkWin(char player) {
 
 		for (int i = 0; i<3; i++) {
@@ -349,7 +344,7 @@ public class TicTacToe extends Application{
 		}
 		return true;
 	}
-	
+
 	/**
 	 * Resets the board back to the starting position
 	 */
@@ -361,33 +356,33 @@ public class TicTacToe extends Application{
 		}
 	}
 	public void showRestart(Stage primaryStage) {
-		
+
 		Button mainMenuButton = new Button("Main Menu");
 		Button restartButton = new Button("Restart");
 		Button exitButton = new Button("Exit");
-		
-		
+
+
 		mainMenuButton.setOnAction(e -> {
 			resetBoard();
 			showMainMenu(primaryStage); // back to main menu
 		});
-		
+
 		restartButton.setOnAction(e -> {
 			resetBoard();
 			startGame(primaryStage);
 		});
-		
+
 		exitButton.setOnAction(e -> {
 			primaryStage.close();
 		});
-		
+
 		// bigger font, not touching the wall
 		mainMenuButton.setStyle("-fx-font-size: 20px; -fx-padding: 10px 20px; -fx-pref-width: 250px; -fx-pref-height: 100px;");
 		restartButton.setStyle("-fx-font-size: 20px; -fx-padding: 10px 20px; -fx-pref-width: 250px;-fx-pref-height: 100px;");
 		exitButton.setStyle("-fx-font-size: 20px; -fx-padding: 10px 20px; -fx-pref-width: 250px;-fx-pref-height: 100px;");
-		
-		
-		
+
+
+
 		// add buttons to the left side
 		buttonBox.getChildren().clear(); // makes sure it doesn't overflow if the method is called multiple times
 		buttonBox.getChildren().addAll(mainMenuButton, restartButton, exitButton);
