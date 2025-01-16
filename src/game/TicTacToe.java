@@ -229,6 +229,13 @@ public class TicTacToe extends Application{
 				player1Score++;
 				player1ScoreLabel.setText("Player 1: " + player1Score);
 				gameOver = true;
+				try {
+				Media media = new Media(new File("src/game/WinnerSoundEffects.mp3").toURI().toString());
+				mediaPlayer = new MediaPlayer(media);
+				mediaPlayer.play();
+				} catch (Exception e) {
+					
+				}
 				showRestart(primaryStage);
 				return;  // exits the method early to not run the computers turn
 			} else if (isBoardFull()) {
@@ -316,12 +323,18 @@ public class TicTacToe extends Application{
 					// updates score
 					player1Score++;
 					player1ScoreLabel.setText("Player 1: " + player1Score);
+					Media media = new Media(new File("src/game/WinnerSoundEffect.mp3").toURI().toString());
+					mediaPlayer = new MediaPlayer(media);
+					mediaPlayer.play();
 					gameOver = true;
 				} else {
 					statusLabel.setText("Player 2 Wins!");
 					// updates score
 					player2Score++;
 					player2ScoreLabel.setText("Player 2: " + player2Score);
+					Media media = new Media(new File("src/game/CartoonClickSound.mp3").toURI().toString());
+					mediaPlayer = new MediaPlayer(media);
+					mediaPlayer.play();
 					gameOver = true;
 				}
 				showRestart(primaryStage);
