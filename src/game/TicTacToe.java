@@ -215,10 +215,10 @@ public class TicTacToe extends Application{
 
 	public void singlePlayerMove(Button square, int row, int column, Stage primaryStage) {	
 		if (board[row][column] == ' ' && !gameOver) {
+			
 			board[row][column] = 'X'; // player move is always X
 			square.setText("X");
 			square.setStyle("-fx-text-fill: blue;");
-			//			player1Turn = false;
 
 			if (checkWin('X')) {
 				statusLabel.setText("Player Wins!");
@@ -238,7 +238,7 @@ public class TicTacToe extends Application{
 
 			// computer's turn
 			if (gameMode.equals("singlePlayerEasy")) {			
-				easyComputerMove(square, primaryStage);
+				easyComputerMove(primaryStage);
 			} else if (gameMode.equals("singlePlayerHard")) {
 				// hardComputerMove(primaryStage);
 			}
@@ -246,51 +246,39 @@ public class TicTacToe extends Application{
 	}
 
 
-	private void easyComputerMove(Button square, Stage primaryStage) {
+	private void easyComputerMove(Stage primaryStage) {
 		if (!gameOver) {
-			int row, col;
-			// keeps randomly choosing a row and column until it finds an empty square 
+	        int row, col;
+	        // keeps randomly choosing a row and column until it finds an empty square 
+	        do {
+	            row = (int) (Math.random() * 3);
+	            col = (int) (Math.random() * 3);
+	        } while (board[row][col] != ' '); // keeps searching until an empty square is found
 
-			do {
-				row = (int) (Math.random() * 3);
-				col = (int) (Math.random() * 3);
-			} while (board[row][col] != ' ');
+	        // place the computer's move ('O') in the selected square
+	        board[row][col] = 'O';
+	        // the gridpane buttons are initialized by a nested for loop where it starts at top left (0) and moves right until the top right (2) and then goes down a row to the middle left (3)
+	        // the line below this accounts for the way the gridpane buttons were added and creates a new button that we can use to edit the moves. formerly i was passing the button in as a parameter
+	        // but it didnt work and this ended up being better
+	        Button square = (Button) gridPane.getChildren().get(row * 3 + col);
+	        square.setText("O");
+	        square.setStyle("-fx-text-fill: red;");
 
-			board[row][col] = 'O';
-			square.setText("O");
-			square.setStyle("-fx-text-fill: red;");
-
-			while(true) {
-				row = (int) (Math.random() * 3);
-				col = (int) (Math.random() * 3);
-
-				if(board[row][col] == ' ') break;
-			}
-
-			board[row][col] = 'O';
-			square.setText("O");
-			square.setStyle("-fx-text-fill: red;");
-
-
-			// ISNT SWAPPING X's AND O's FIX
-			if(checkWin('O')) {
-				statusLabel.setText("Player 2 (Computer) Wins!");
-				// updates score
-				player2Score++;
-				player2ScoreLabel.setText("Player 2 (Computer): " + player2Score);
-				gameOver = true;
-			} else if (isBoardFull()) {
-				statusLabel.setText("It's a Draw!");
-				draws++;
-				drawsLabel.setText("Draws: " + draws);
-				gameOver = true;
-				showRestart(primaryStage);
-			}  else {
-
-				statusLabel.setText("Player's Turn (X)");
-			}
-		}
-
+	        // check if the computer wins after making the move
+	        if (checkWin('O')) {
+	            statusLabel.setText("Player 2 (Computer) Wins!");
+	            player2Score++;
+	            player2ScoreLabel.setText("Player 2 (Computer): " + player2Score);
+	            gameOver = true;
+	        } else if (isBoardFull()) {
+	            statusLabel.setText("It's a Draw!");
+	            draws++;
+	            drawsLabel.setText("Draws: " + draws);
+	            gameOver = true;
+	        } else {
+	            statusLabel.setText("Player's Turn (X)");
+	        }
+	    }
 	}
 
 
@@ -439,12 +427,12 @@ public class TicTacToe extends Application{
 			gameLayout.getChildren().add(line);			
 		}
 		if(row == 1) {
-			Line line = new Line(00, 540, 10000, 540);
+			Line line = new Line(500, 540, 1425, 540);
 			line.setStrokeWidth(10);
 			gameLayout.getChildren().add(line);			
 		}
 		if(row == 2) {
-			Line line = new Line(00, 770, 10000, 790);
+			Line line = new Line(500, 790, 1425, 790);
 			line.setStrokeWidth(10);
 			gameLayout.getChildren().add(line);			
 		}
