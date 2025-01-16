@@ -217,6 +217,7 @@ public class TicTacToe extends Application{
 	}
 
 	public void singlePlayerMove(Button square, int row, int column, Stage primaryStage) {	
+
 		if (board[row][column] == ' ' && !gameOver) {
 			
 			board[row][column] = 'X'; // player move is always X
