@@ -408,12 +408,12 @@ public class TicTacToe extends Application{
 			gameLayout.getChildren().add(line);			
 		}
 		if(row == 1) {
-			Line line = new Line(00, 540, 10000, 540);
+			Line line = new Line(500, 540, 1425, 540);
 			line.setStrokeWidth(10);
 			gameLayout.getChildren().add(line);			
 		}
 		if(row == 2) {
-			Line line = new Line(00, 770, 10000, 790);
+			Line line = new Line(500, 790, 1425, 790);
 			line.setStrokeWidth(10);
 			gameLayout.getChildren().add(line);			
 		}
