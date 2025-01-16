@@ -32,13 +32,14 @@ public class TicTacToe extends Application{
 	private Label player2ScoreLabel = new Label("Player 2: " + player2Score);
 	private Label drawsLabel = new Label("Draws:" + draws);
 	private boolean gameOver;
+	Media themeMusic;
+
 	private MediaPlayer mediaPlayer;
+
 	@Override
 	public void start(Stage primaryStage) throws Exception {
 		resetBoard();
 		showMainMenu(primaryStage);
-
-
 
 	}
 
@@ -50,7 +51,8 @@ public class TicTacToe extends Application{
 		twoPlayerButton.setStyle("-fx-font-size: 20px; -fx-padding: 10px 20px; -fx-pref-width: 250px; -fx-pref-height: 100px;");
 		titleLabel.setStyle("-fx-font-size: 35px; -fx-text-fill: black;");
 
-
+ 
+		primaryStage.setTitle("Main Menu");
 
 		try {
 			Media media = new Media(new File("src/game/MenuMusic.mp3").toURI().toString());
@@ -60,8 +62,6 @@ public class TicTacToe extends Application{
 
 		}  
 		primaryStage.setTitle("Main Menu");
-
-
 
 		singlePlayerButton.setOnAction(e -> {
 			showDifficultySelector(primaryStage);
@@ -431,7 +431,6 @@ public class TicTacToe extends Application{
 		}
 
 	}
-
 
 	public static void main(String[] args) {
 		launch(args);
