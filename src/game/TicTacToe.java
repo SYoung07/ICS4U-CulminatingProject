@@ -130,21 +130,26 @@ public class TicTacToe extends Application{
 		gridPane.setGridLinesVisible(true);
 		gridPane.setStyle("-fx-font-size: 75px;"); // makes the text of the grid bigger (the X's and O's)
 		statusLabel.setStyle("-fx-font-size: 25px;"); // makes the text of the statusLabel bigger
+		
+		// creates the buttons
 		for (int i = 0; i<3; i++) {
 			for (int j = 0; j<3; j++) {
 				Button square = new Button();
 				square.setPrefSize(250, 250);
 				int row = i;
 				int column = j;
-
+				
 				square.setOnAction(e ->{
 					if(gameMode.equals("twoPlayer")) {
 						twoPlayerMove(square, row, column, primaryStage);
+						System.out.println(gridPane.getRowIndex(square) + " " + gridPane.getColumnIndex(square));
 					}else {
 						singlePlayerMove(square,row,column,primaryStage);
 					}
 				});
 				gridPane.add(square, row, column);
+//				gridPane.add(square, column, row);
+				
 			}
 
 		}
@@ -235,13 +240,19 @@ public class TicTacToe extends Application{
 	            row = (int) (Math.random() * 3);
 	            col = (int) (Math.random() * 3);
 	        } while (board[row][col] != ' '); // keeps searching until an empty square is found
-
+	        // test case
+	        System.out.println(row + " " + col);
 	        // place the computer's move ('O') in the selected square
 	        board[row][col] = 'O';
 	        // the gridpane buttons are initialized by a nested for loop where it starts at top left (0) and moves right until the top right (2) and then goes down a row to the middle left (3)
 	        // the line below this accounts for the way the gridpane buttons were added and creates a new button that we can use to edit the moves. formerly i was passing the button in as a parameter
-	        // but it didnt work and this ended up being better
+	        // but it didn't work and this ended up being better
 	        Button square = (Button) gridPane.getChildren().get(row * 3 + col);
+	        
+	        // test case
+//	        System.out.println((Button) gridPane.getChildren().get(row * 3 + col));
+	        
+	        
 	        square.setText("O");
 	        square.setStyle("-fx-text-fill: red;");
 
