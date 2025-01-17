@@ -158,7 +158,7 @@ public class TicTacToe extends Application{
 		gameLayout = new BorderPane();
 		gridPane.setAlignment(Pos.CENTER);
 		gridPane.setGridLinesVisible(true);
-		gridPane.setStyle("-fx-font-size: 75px;"); // makes the text of the grid bigger (the X's and O's)
+		gridPane.setStyle("-fx-font-size: 115px;"); // makes the text of the grid bigger (the X's and O's)
 		statusLabel.setStyle("-fx-font-size: 25px;"); // makes the text of the statusLabel bigger
 
 //		Image gameBackgroundImage = new Image("src/game/XObackground");
@@ -263,7 +263,7 @@ public class TicTacToe extends Application{
 			square.setText("X");
 			square.setStyle("-fx-text-fill: blue;");
 
-			if (checkWin('X')) {
+			if (checkWin('X', false)) {
 				statusLabel.setText("Player Wins!");
 				player1Score++;
 				player1ScoreLabel.setText(String.format("%11s %d", "Player:", player1Score));
@@ -291,7 +291,7 @@ public class TicTacToe extends Application{
 			if (gameMode.equals("singlePlayerEasy")) {			
 				easyComputerMove(primaryStage);
 			} else if (gameMode.equals("singlePlayerHard")) {
-				// hardComputerMove(primaryStage);
+				 hardComputerMove(primaryStage);
 			}
 		}
 	}
@@ -305,7 +305,6 @@ public class TicTacToe extends Application{
 				row = (int) (Math.random() * 3);
 				col = (int) (Math.random() * 3);
 			} while (board[row][col] != ' '); // keeps searching until an empty square is found
-			// test case
 
 
 			// place the computer's move ('O') in the selected square
@@ -325,7 +324,7 @@ public class TicTacToe extends Application{
 			square.setStyle("-fx-text-fill: red;");
 
 			// check if the computer wins after making the move
-			if (checkWin('O')) {
+			if (checkWin('O', false)) {
 				statusLabel.setText("Computer Wins!");
 				player2Score++;
 				player2ScoreLabel.setText(String.format("%11s %d", "Computer:", player2Score));
@@ -342,8 +341,109 @@ public class TicTacToe extends Application{
 			}
 		}
 	}
+	
+	private int minimax(int moves, boolean computerTurn) {
+		// The minimax algorithm evaluates all possible moves and returns the move that maximizes the AI's chances of winning while minimizing the player's chance
+		
+		// base cases
+		if (checkWin('O', true)) return 10 - moves; // AI wins, prefers faster wins by subtracting the amount of moves
+	    if (checkWin('X', true)) return moves - 10; // player wins, prefers slower losses by adding the number of moves
+	    if (isBoardFull()) return 0; // draw
 
+	    if (computerTurn) {
+	        int bestScore = -1000; // worst possible score for the AI
+	        // goes through all possible moves
+	        for (int row = 0; row < 3; row++) {
+	            for (int col = 0; col < 3; col++) {
+	                if (board[row][col] == ' ') {
+	                    board[row][col] = 'O';
+	                    // AI is trying to maximize its score by recursively calling minimax to evaluate the score after this move
+	                    int score = minimax(moves + 1, false); // swaps to the opponent players turn
+	                    board[row][col] = ' '; // undos the move once the recursion above is fully completed
+	                    bestScore = Math.max(bestScore, score); // the ai wants to maximize its score
+	                }
+	            }
+	        }
+	        return bestScore; // returns the best score for the AI
+	    } else {
+	        int bestScore = 1000; // worst possible score for the player
+	        for (int row = 0; row < 3; row++) {
+	            for (int col = 0; col < 3; col++) {
+	                if (board[row][col] == ' ') {
+	                    board[row][col] = 'X';
+	                    int score = minimax(moves + 1, true); // after the player makes a move, it goes back to the AI's turn
+	                    board[row][col] = ' '; // undos the move once the recursion above is fully completed
+	                    bestScore = Math.min(bestScore, score); // player wants to minimize the AI's score
+	                }
+	            }
+	        }
+	        return bestScore; // returns the best score for the player
+	    }
+	}
+	private int[] findBestMove() {
+	    int bestScore = -1000; //   worst possible score for the AI
+	    int[] bestMove = new int[2]; // array to store the best move (row, column)
 
+	    // Loop through all squares on the board
+	    for (int row = 0; row < 3; row++) {
+	        for (int col = 0; col < 3; col++) {
+	            if (board[row][col] == ' ') { // checks for empty squares
+	                board[row][col] = 'O'; // places a temporary move for the minimax algorithm
+	                // evaluate the move using the minimax algorithm
+	                int score = minimax(0, false); // 0 for moves, false because it's the player's turn next
+	                board[row][col] = ' '; // undo the move after recursion
+
+	                // if this move has a better score, update the bestScore and store the move
+	                if (score > bestScore) {
+	                    bestScore = score;
+	                    bestMove[0] = row;
+	                    bestMove[1] = col;
+	                }
+	            }
+	        }
+	    }
+
+	    return bestMove; // returns the best move found [row][col]
+	}
+	private void hardComputerMove(Stage primaryStage) {
+		if (!gameOver) {
+			int[] bestMove = findBestMove();
+			int row = bestMove[0];
+			int col = bestMove[1];
+		
+			
+			// place the computer's move ('O') in the selected square
+			board[row][col] = 'O';
+			// the gridpane buttons are initialized by a nested for loop where it starts at top left (0) and moves right until the top right (2) and then goes down a row to the middle left (3)
+			// the line below this accounts for the way the gridpane buttons were added and creates a new button that we can use to edit the moves. formerly i was passing the button in as a parameter
+			// but it didn't work and this ended up being better
+			Button square = buttons[row][col];
+
+			// test case
+			System.out.println("AI Move: Row " + row + ", Column " + col);
+			System.out.println("Button: " + square);
+
+			square.setText("O");
+			square.setStyle("-fx-text-fill: red;");
+
+			// check if the computer wins after making the move
+			if (checkWin('O', false)) {
+				statusLabel.setText("Computer Wins!");
+				player2Score++;
+				player2ScoreLabel.setText(String.format("%11s %d", "Computer:", player2Score));
+				gameOver = true;
+				showRestart(primaryStage);
+			} else if (isBoardFull()) {
+				statusLabel.setText("It's a Draw!");
+				draws++;
+				drawsLabel.setText(String.format("%11s %d", "Draws:", draws));
+				gameOver = true;
+				showRestart(primaryStage);
+			} else {
+				statusLabel.setText("Player's Turn (X)");
+			}
+		}
+	} 
 	public void twoPlayerMove(Button square, int row, int column, Stage primaryStage) {
 		// if the square is empty and the game isn't over
 		if(board[row][column] == ' ' && !gameOver) {
@@ -362,7 +462,7 @@ public class TicTacToe extends Application{
 			// changes the visible grid to the player move
 			square.setText(String.valueOf(currentPlayer)); // string.valueof converts the char to a string because .setText needs a string
 
-			if(checkWin(currentPlayer)) {
+			if(checkWin(currentPlayer, false)) {
 				if(player1Turn) {
 					statusLabel.setText("Player 1 Wins!");
 					// updates score
@@ -401,18 +501,20 @@ public class TicTacToe extends Application{
 		}
 	}
 
-	public boolean checkWin(char player) {
-
+	public boolean checkWin(char player, boolean minimax) {
+		
 		for (int i = 0; i<3; i++) {
 
 			// rows
 			if(board[i][0] == player && board[i][1] == player && board [i][2] == player ) {
-				drawWinningLine(i,-1, player);
+				// if it isnt being called by the minimax algorithm, draw the winning line
+				if(!minimax) drawWinningLine(i,-1, player); 
 				return true;
 			}
 			// columns
 			if(board[0][i] == player && board[1][i] == player && board [2][i] == player ) {
-				drawWinningLine(-1,i, player);
+				// if it isnt being called by the minimax algorithm, draw the winning line
+				if(!minimax) drawWinningLine(-1,i, player);
 				return true;
 			}
 
@@ -420,9 +522,13 @@ public class TicTacToe extends Application{
 
 			// diagonal
 			if(board[0][0] == player && board[1][1] == player && board[2][2] == player) {
+				// if it isnt being called by the minimax algorithm, draw the winning line
+				if(!minimax) drawWinningLine(3, 3, player); 
 				return true;
 			}
 			if(board[0][2] == player && board[1][1] == player && board[2][0] == player) {
+				// if it isnt being called by the minimax algorithm, draw the winning line
+				if(!minimax) drawWinningLine(4, 4, player); 
 				return true;
 			}
 		}
@@ -511,14 +617,23 @@ public class TicTacToe extends Application{
 		if(row == -1 && column == 2) {
 			line = new Line(1210, 125, 1210, 965);
 		}
+		
+		// diagonals (idk what other values to use for row and column so i picked random ones)
+		
+		// main diagonal (top left to bottom right)
+		if(row == 3 && column == 3) {
+			line = new Line(585, 165, 1335, 915);		
+		}
+		// anti-diagonal (top right to bottom left)
+		if(row == 4 && column == 4) {
+			line = new Line(1335, 165, 585, 915);		
+		}
 
 
 		line.setStrokeWidth(10);
-		if(player == 'X') line.setStroke(Color.BLUE);
-		if(player == 'O') line.setStroke(Color.RED);
+		if(player == 'X') line.setStroke(Color.DODGERBLUE);
+		if(player == 'O') line.setStroke(Color.INDIANRED);
 		gameLayout.getChildren().add(line);
-		line.toBack();
-		gameLayout.toFront();
 
 
 	}
