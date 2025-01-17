@@ -20,31 +20,32 @@ import javafx.stage.Stage;
 public class TicTacToe extends Application{
 	// 2d array for the tictactoe board
 	private char[][] board = new char[3][3];
+	private Button[][] buttons = new Button[3][3]; // this is for storing the buttons so the ai can do the right moves visually
 	private String gameMode;
 	private Label statusLabel = new Label();
 	private boolean player1Turn;
 	GridPane gridPane = new GridPane();
 	private BorderPane gameLayout = new BorderPane();
 	private VBox buttonBox = new VBox(10);
-	private int player1Score = 0;
-	private int player2Score = 0;
+	private int player1Score;
+	private int player2Score;
 	private int draws = 0;
-	private Label player1ScoreLabel = new Label("Player 1: " + player1Score);
-	private Label player2ScoreLabel = new Label("Player 2: " + player2Score);
-	private Label drawsLabel = new Label("Draws:" + draws);
+	private Label player1ScoreLabel;
+	private Label player2ScoreLabel;
+	private Label drawsLabel;
 	private boolean gameOver;
-	Media themeMusic;
-
-	private MediaPlayer mediaPlayer;
+	private MediaPlayer mediaPlayer; // all music
 
 	@Override
 	public void start(Stage primaryStage) throws Exception {
-		resetBoard();
 		showMainMenu(primaryStage);
 
 	}
 
 	private void showMainMenu(Stage primaryStage) {
+		// resets scores to 0 when going to the main menu instead of restarting the same gamemode
+		player1Score = 0;
+		player2Score = 0;
 		Label titleLabel = new Label("Select Game Mode");
 		Button singlePlayerButton = new Button("Single Player");
 		Button twoPlayerButton = new Button("Two Player");
@@ -52,7 +53,7 @@ public class TicTacToe extends Application{
 		twoPlayerButton.setStyle("-fx-font-size: 20px; -fx-padding: 10px 20px; -fx-pref-width: 250px; -fx-pref-height: 100px;");
 		titleLabel.setStyle("-fx-font-size: 35px; -fx-text-fill: black;");
 
- 
+
 		primaryStage.setTitle("Main Menu");
 
 		try {
@@ -60,6 +61,7 @@ public class TicTacToe extends Application{
 			mediaPlayer = new MediaPlayer(media);
 			mediaPlayer.play();
 		} catch(Exception e) {
+			e.printStackTrace();
 
 		}  
 		primaryStage.setTitle("Main Menu");
@@ -120,10 +122,34 @@ public class TicTacToe extends Application{
 	}
 
 	private void startGame(Stage primaryStage) {
-		// reset to player 1's turn
+		// reset to player 1's turn and resets the board
+		resetBoard();
 		player1Turn = true; 
 		statusLabel.setText("Player 1's Turn (X)");
 		gameOver = false;
+
+		// different names for players depending on game mode
+		if(gameMode.equals("twoPlayer")) {
+			player1ScoreLabel = new Label("Player 1: " + player1Score);
+			player2ScoreLabel = new Label("Player 2: " + player2Score);
+			drawsLabel = new Label("Draws: " + draws);
+
+
+		} 
+		// singlePlayerEasy or singlePlayerHard
+		else { 
+
+			//						player1ScoreLabel = new Label("Player: " + player1Score);
+			//						player2ScoreLabel = new Label("Computer: " + player2Score);
+			//						drawsLabel = new Label("Draws: " + draws);
+
+			// attempts to align them better by using string.format to reserve space because player is shorter than computer
+			player1ScoreLabel = new Label(String.format("%11s %d", "Player:", player1Score));
+			player2ScoreLabel = new Label(String.format("%11s %d", "Computer:", player2Score));
+			drawsLabel = new Label(String.format("%11s %d", "Draws:", draws));
+
+		}
+
 
 		gridPane = new GridPane();
 		gameLayout = new BorderPane();
@@ -131,43 +157,49 @@ public class TicTacToe extends Application{
 		gridPane.setGridLinesVisible(true);
 		gridPane.setStyle("-fx-font-size: 75px;"); // makes the text of the grid bigger (the X's and O's)
 		statusLabel.setStyle("-fx-font-size: 25px;"); // makes the text of the statusLabel bigger
-		
 
-		
 
-		
+
+
+
 		// creates the buttons
 		for (int i = 0; i<3; i++) {
 			for (int j = 0; j<3; j++) {
-				Button square = new Button();
-				square.setPrefSize(250, 250);
+				// for some reason there were errors if i used row and column as variables in the for loops
 				int row = i;
 				int column = j;
+				Button square = new Button();
+				square.setPrefSize(250, 250); // 250x250px button
+				buttons[row][column] = square; // for the AI to make the right move visually
+				gridPane.add(square, column, row); // gridpane.add uses (column, row) instead of the usual (row, column)
+				//				gridPane.add(square, row, column);
 
-				
 
 				try {
-				square.setOnAction(e ->{
-					if(gameMode.equals("twoPlayer")) {
-						twoPlayerMove(square, row, column, primaryStage);
-						System.out.println(gridPane.getRowIndex(square) + " " + gridPane.getColumnIndex(square));
-						
+					square.setOnAction(e ->{
+						if(gameMode.equals("twoPlayer")) {
+							twoPlayerMove(square, row, column, primaryStage);
+							// for testing, prints the row and column of the button clicked
+							System.out.println(gridPane.getRowIndex(square) + " " + gridPane.getColumnIndex(square));
+
 							Media media = new Media(new File("src/game/CartoonClickSound.mp3").toURI().toString());
 							mediaPlayer = new MediaPlayer(media);
 							mediaPlayer.play();
-					}else {
-						singlePlayerMove(square,row,column,primaryStage);
-						Media media = new Media(new File("src/game/CartoonClickSound.mp3").toURI().toString());
-						mediaPlayer = new MediaPlayer(media);
-						mediaPlayer.play();
-					}
-				});
+						}else {
+							singlePlayerMove(square,row,column,primaryStage);
+							// for testing, prints the row and column of the button clicked
+							System.out.println(gridPane.getRowIndex(square) + " " + gridPane.getColumnIndex(square));
+
+							Media media = new Media(new File("src/game/CartoonClickSound.mp3").toURI().toString());
+							mediaPlayer = new MediaPlayer(media);
+							mediaPlayer.play();
+						}
+					});
 				} catch (Exception e) {
-					
+					e.printStackTrace();
 				}
-				gridPane.add(square, row, column);
-//				gridPane.add(square, column, row);
-				
+
+
 			}
 		}
 
@@ -187,8 +219,8 @@ public class TicTacToe extends Application{
 		Label scoreText = new Label("SCORES");
 		player1ScoreLabel.setStyle("-fx-font-size: 35px; -fx-text-fill: blue;");
 		player2ScoreLabel.setStyle("-fx-font-size: 35px; -fx-text-fill: red;");
-		scoreText.setStyle("-fx-font-size: 35px; -fx-text-fill: black;");
 		drawsLabel.setStyle("-fx-font-size: 35px; -fx-text-fill: gray;");
+		scoreText.setStyle("-fx-font-size: 35px; -fx-text-fill: black;");
 
 		HBox scoreBox = new HBox(100, player1ScoreLabel, drawsLabel, player2ScoreLabel);
 		scoreBox.setAlignment(Pos.TOP_CENTER);
@@ -219,7 +251,7 @@ public class TicTacToe extends Application{
 	public void singlePlayerMove(Button square, int row, int column, Stage primaryStage) {	
 
 		if (board[row][column] == ' ' && !gameOver) {
-			
+
 			board[row][column] = 'X'; // player move is always X
 			square.setText("X");
 			square.setStyle("-fx-text-fill: blue;");
@@ -227,21 +259,22 @@ public class TicTacToe extends Application{
 			if (checkWin('X')) {
 				statusLabel.setText("Player Wins!");
 				player1Score++;
-				player1ScoreLabel.setText("Player 1: " + player1Score);
+				player1ScoreLabel.setText(String.format("%11s %d", "Player:", player1Score));
 				gameOver = true;
 				try {
-				Media media = new Media(new File("src/game/WinnerSoundEffects.mp3").toURI().toString());
-				mediaPlayer = new MediaPlayer(media);
-				mediaPlayer.play();
+					Media media = new Media(new File("src/game/WinnerSoundEffect.mp3").toURI().toString());
+					mediaPlayer = new MediaPlayer(media);
+					mediaPlayer.play();
 				} catch (Exception e) {
-					
+					e.printStackTrace();
+
 				}
 				showRestart(primaryStage);
 				return;  // exits the method early to not run the computers turn
 			} else if (isBoardFull()) {
 				statusLabel.setText("It's a Draw!");
 				draws++;
-				drawsLabel.setText("Draws: " + draws);
+				drawsLabel.setText(String.format("%11s %d", "Draws:", draws));
 				gameOver = true;
 				showRestart(primaryStage);
 				return; // exits the method early to not run the computers turn
@@ -259,43 +292,47 @@ public class TicTacToe extends Application{
 
 	private void easyComputerMove(Stage primaryStage) {
 		if (!gameOver) {
-	        int row, col;
-	        // keeps randomly choosing a row and column until it finds an empty square 
-	        do {
-	            row = (int) (Math.random() * 3);
-	            col = (int) (Math.random() * 3);
-	        } while (board[row][col] != ' '); // keeps searching until an empty square is found
-	        // test case
-	        System.out.println(row + " " + col);
-	        // place the computer's move ('O') in the selected square
-	        board[row][col] = 'O';
-	        // the gridpane buttons are initialized by a nested for loop where it starts at top left (0) and moves right until the top right (2) and then goes down a row to the middle left (3)
-	        // the line below this accounts for the way the gridpane buttons were added and creates a new button that we can use to edit the moves. formerly i was passing the button in as a parameter
-	        // but it didn't work and this ended up being better
-	        Button square = (Button) gridPane.getChildren().get(row * 3 + col);
-	        
-	        // test case
-//	        System.out.println((Button) gridPane.getChildren().get(row * 3 + col));
-	        
-	        
-	        square.setText("O");
-	        square.setStyle("-fx-text-fill: red;");
+			int row, col;
+			// keeps randomly choosing a row and column until it finds an empty square 
+			do {
+				row = (int) (Math.random() * 3);
+				col = (int) (Math.random() * 3);
+			} while (board[row][col] != ' '); // keeps searching until an empty square is found
+			// test case
 
-	        // check if the computer wins after making the move
-	        if (checkWin('O')) {
-	            statusLabel.setText("Player 2 (Computer) Wins!");
-	            player2Score++;
-	            player2ScoreLabel.setText("Player 2 (Computer): " + player2Score);
-	            gameOver = true;
-	        } else if (isBoardFull()) {
-	            statusLabel.setText("It's a Draw!");
-	            draws++;
-	            drawsLabel.setText("Draws: " + draws);
-	            gameOver = true;
-	        } else {
-	            statusLabel.setText("Player's Turn (X)");
-	        }
-	    }
+
+			// place the computer's move ('O') in the selected square
+			board[row][col] = 'O';
+			// the gridpane buttons are initialized by a nested for loop where it starts at top left (0) and moves right until the top right (2) and then goes down a row to the middle left (3)
+			// the line below this accounts for the way the gridpane buttons were added and creates a new button that we can use to edit the moves. formerly i was passing the button in as a parameter
+			// but it didn't work and this ended up being better
+			Button square = buttons[row][col];
+
+			// test case
+			System.out.println("AI Move: Row " + row + ", Column " + col);
+			System.out.println("Button: " + square);
+
+
+			square.setText("O");
+			square.setStyle("-fx-text-fill: red;");
+
+			// check if the computer wins after making the move
+			if (checkWin('O')) {
+				statusLabel.setText("Computer Wins!");
+				player2Score++;
+				player2ScoreLabel.setText(String.format("%11s %d", "Computer:", player2Score));
+				gameOver = true;
+				showRestart(primaryStage);
+			} else if (isBoardFull()) {
+				statusLabel.setText("It's a Draw!");
+				draws++;
+				drawsLabel.setText(String.format("%11s %d", "Draws:", draws));
+				gameOver = true;
+				showRestart(primaryStage);
+			} else {
+				statusLabel.setText("Player's Turn (X)");
+			}
+		}
 	}
 
 
@@ -332,7 +369,7 @@ public class TicTacToe extends Application{
 					// updates score
 					player2Score++;
 					player2ScoreLabel.setText("Player 2: " + player2Score);
-					Media media = new Media(new File("src/game/CartoonClickSound.mp3").toURI().toString());
+					Media media = new Media(new File("src/game/WinnerSoundEffect.mp3").toURI().toString());
 					mediaPlayer = new MediaPlayer(media);
 					mediaPlayer.play();
 					gameOver = true;
@@ -361,16 +398,17 @@ public class TicTacToe extends Application{
 		for (int i = 0; i<3; i++) {
 
 			// rows
-			if(board[0][i] == player && board[1][i] == player && board [2][i] == player ) {
+			if(board[i][0] == player && board[i][1] == player && board [i][2] == player ) {
 				drawWinningLine(i,-1);
 				return true;
 			}
 			// columns
-			if(board[i][0] == player && board[i][1] == player && board [i][2] == player ) {
-				drawWinningLine(-1,0);
+			if(board[0][i] == player && board[1][i] == player && board [2][i] == player ) {
+				drawWinningLine(-1,i);
 				return true;
 			}
-			// 0,0  0,1
+
+
 
 			// diagonal
 			if(board[0][0] == player && board[1][1] == player && board[2][2] == player) {
