@@ -13,6 +13,7 @@ import javafx.scene.layout.HBox;
 import javafx.scene.layout.VBox;
 import javafx.scene.media.Media;
 import javafx.scene.media.MediaPlayer;
+import javafx.scene.paint.Color;
 import javafx.scene.shape.Line;
 import javafx.stage.Stage;
 
@@ -35,7 +36,7 @@ public class TicTacToe extends Application{
 	private Label drawsLabel;
 	private boolean gameOver;
 	private MediaPlayer mediaPlayer; // all music
-
+	VBox centerLayout;
 	@Override
 	public void start(Stage primaryStage) throws Exception {
 		showMainMenu(primaryStage);
@@ -230,7 +231,7 @@ public class TicTacToe extends Application{
 		// this is to have the SCORE text along with player score aligned at the top
 		VBox scoreLayout = new VBox(scoreText, scoreBox);
 		scoreLayout.setAlignment(Pos.CENTER);
-		VBox centerLayout = new VBox(gridPane, statusLabel);
+		centerLayout = new VBox(gridPane, statusLabel);
 
 		centerLayout.setAlignment(Pos.CENTER);
 
@@ -399,12 +400,12 @@ public class TicTacToe extends Application{
 
 			// rows
 			if(board[i][0] == player && board[i][1] == player && board [i][2] == player ) {
-				drawWinningLine(i,-1);
+				drawWinningLine(i,-1, player);
 				return true;
 			}
 			// columns
 			if(board[0][i] == player && board[1][i] == player && board [2][i] == player ) {
-				drawWinningLine(-1,i);
+				drawWinningLine(-1,i, player);
 				return true;
 			}
 
@@ -478,25 +479,40 @@ public class TicTacToe extends Application{
 		buttonBox.setStyle("-fx-padding: 30px;"); // add spacing from the side
 
 	}
-	public void drawWinningLine(int row, int column) {
+	public void drawWinningLine(int row, int column, char player) {
+		Line line = new Line();
+		// rows
+		if(row == 0 && column == -1) {
+			line = new Line(500, 290, 1425, 290);
+			}
+		if(row == 1 && column == -1) {
+			 line = new Line(500, 540, 1425, 540);
+		}
+		if(row == 2 && column == -1) {
+			 line = new Line(500, 790, 1425, 790);
+		}
+
+		// columns
+		if(row == -1 && column == 0) {
+			 line = new Line(710, 125, 710, 965);
+		}
+
+		if(row == -1 && column == 1) {
+			line = new Line(960, 125, 960, 965);
+		}
+
+		if(row == -1 && column == 2) {
+			line = new Line(1210, 125, 1210, 965);
+		}
 
 
+		line.setStrokeWidth(10);
+		if(player == 'X') line.setStroke(Color.BLUE);
+		if(player == 'O') line.setStroke(Color.RED);
+		gameLayout.getChildren().add(line);
+		line.toBack();
+		gameLayout.toFront();
 
-		if(row == 0) {
-			Line line = new Line(500, 290, 1425, 290);
-			line.setStrokeWidth(10);
-			gameLayout.getChildren().add(line);			
-		}
-		if(row == 1) {
-			Line line = new Line(500, 540, 1425, 540);
-			line.setStrokeWidth(10);
-			gameLayout.getChildren().add(line);			
-		}
-		if(row == 2) {
-			Line line = new Line(500, 790, 1425, 790);
-			line.setStrokeWidth(10);
-			gameLayout.getChildren().add(line);			
-		}
 
 	}
 
