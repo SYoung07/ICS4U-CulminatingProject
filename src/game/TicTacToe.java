@@ -7,6 +7,8 @@ import javafx.geometry.Pos;
 import javafx.scene.Scene;
 import javafx.scene.control.Button;
 import javafx.scene.control.Label;
+import javafx.scene.image.Image;
+import javafx.scene.image.ImageView;
 import javafx.scene.layout.BorderPane;
 import javafx.scene.layout.GridPane;
 import javafx.scene.layout.HBox;
@@ -40,7 +42,7 @@ public class TicTacToe extends Application{
 	@Override
 	public void start(Stage primaryStage) throws Exception {
 		showMainMenu(primaryStage);
-
+		
 	}
 
 	private void showMainMenu(Stage primaryStage) {
@@ -148,7 +150,7 @@ public class TicTacToe extends Application{
 			player1ScoreLabel = new Label(String.format("%11s %d", "Player:", player1Score));
 			player2ScoreLabel = new Label(String.format("%11s %d", "Computer:", player2Score));
 			drawsLabel = new Label(String.format("%11s %d", "Draws:", draws));
-
+			
 		}
 
 
@@ -159,10 +161,14 @@ public class TicTacToe extends Application{
 		gridPane.setStyle("-fx-font-size: 75px;"); // makes the text of the grid bigger (the X's and O's)
 		statusLabel.setStyle("-fx-font-size: 25px;"); // makes the text of the statusLabel bigger
 
-
-
-
-
+//		Image gameBackgroundImage = new Image("src/game/XObackground");
+//		ImageView background = new ImageView(gameBackgroundImage);
+		
+		
+		
+		
+		
+		
 		// creates the buttons
 		for (int i = 0; i<3; i++) {
 			for (int j = 0; j<3; j++) {
