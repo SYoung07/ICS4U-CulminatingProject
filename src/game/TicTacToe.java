@@ -319,6 +319,7 @@ public class TicTacToe extends Application{
 			System.out.println("AI Move: Row " + row + ", Column " + col);
 			System.out.println("Button: " + square);
 
+			
 
 			square.setText("O");
 			square.setStyle("-fx-text-fill: red;");
