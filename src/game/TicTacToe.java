@@ -12,6 +12,7 @@ import javafx.scene.image.ImageView;
 import javafx.scene.layout.BorderPane;
 import javafx.scene.layout.GridPane;
 import javafx.scene.layout.HBox;
+import javafx.scene.layout.StackPane;
 import javafx.scene.layout.VBox;
 import javafx.scene.media.Media;
 import javafx.scene.media.MediaPlayer;
@@ -48,6 +49,7 @@ public class TicTacToe extends Application{
 	private Label player2ScoreLabel;
 	private Label drawsLabel;
 	private boolean gameOver;
+	private MediaPlayer backgroundMediaPlayer;
 	private MediaPlayer mediaPlayer;
 	VBox centerLayout;
 	/**
@@ -78,8 +80,9 @@ public class TicTacToe extends Application{
 
 		try {
 			Media media = new Media(new File("src/game/MenuMusic.mp3").toURI().toString());
-			mediaPlayer = new MediaPlayer(media);
-			mediaPlayer.play();
+			backgroundMediaPlayer = new MediaPlayer(media);
+			backgroundMediaPlayer.setVolume(0.1);
+			backgroundMediaPlayer.play();
 		} catch(Exception e) {
 			e.printStackTrace();
 		}  
@@ -112,12 +115,17 @@ public class TicTacToe extends Application{
 	 */
 	private void showDifficultySelector(Stage primaryStage) {
 		// create labels and buttons
+		
+		
 		primaryStage.setTitle("Tic-Tac-Toe: Difficulty Selector");
 
 		Label titleLabel = new Label("Choose the Difficulty");
 		Button easyModeButton = new Button("Easy");
 		Button hardModeButton = new Button("Hard");
-
+		Image difficultySelector = new Image("file:src/game/difficultySelector.jpeg");
+		ImageView imageView = new ImageView(difficultySelector);
+		StackPane background = new StackPane();
+		
 		easyModeButton.setOnAction(e -> {
 			gameMode = "singlePlayerEasy";
 			primaryStage.setTitle("Tic-Tac-Toe: Player vs Computer (Easy)");
@@ -139,8 +147,9 @@ public class TicTacToe extends Application{
 		titleLabel.setStyle("-fx-font-size: 35px; -fx-text-fill: black;");
 		// add a (cracked?)line down the center to separate easy and hard modes with different backgrounds for each (damjan sketch) - NATHANS JOB
 		// maybe add a unique background for each side (damjan sketch) maybe nathans job if he can figure it out
-
-		Scene mainMenu = new Scene(screenLayout, 400, 300);
+		
+		background.getChildren().addAll(imageView, screenLayout);
+		Scene mainMenu = new Scene(background, 400, 300);
 		primaryStage.setScene(mainMenu);
 		primaryStage.setMaximized(false);
 		primaryStage.setMaximized(true);
@@ -157,6 +166,9 @@ public class TicTacToe extends Application{
 		player1Turn = true; 
 		statusLabel.setText("Player 1's Turn (X)");
 		gameOver = false;
+		Image XObackground = new Image("file:src/game/XObackground.jpg");
+		ImageView imageView = new ImageView(XObackground);
+		StackPane gameBackground = new StackPane();
 
 		// different names for players depending on game mode
 		if(gameMode.equals("twoPlayer")) {
@@ -184,10 +196,7 @@ public class TicTacToe extends Application{
 		gridPane.setAlignment(Pos.CENTER);
 		gridPane.setGridLinesVisible(true);
 		gridPane.setStyle("-fx-font-size: 115px;"); // makes the text of the grid bigger (the X's and O's)
-		statusLabel.setStyle("-fx-font-size: 25px;"); // makes the text of the statusLabel bigger
-
-		//		Image gameBackgroundImage = new Image("src/game/XObackground");
-		//		ImageView background = new ImageView(gameBackgroundImage);
+		statusLabel.setStyle("-fx-background-color: yellow; -fx-font-size: 25px;"); // makes the text of the statusLabel bigger
 
 		// creates the buttons
 		for (int i = 0; i<3; i++) {
@@ -237,15 +246,15 @@ public class TicTacToe extends Application{
 		spacer.getChildren().clear(); // empty the right side 
 		// add score labels at the top and change the colours of them
 		Label scoreText = new Label("SCORES");
-		player1ScoreLabel.setStyle("-fx-font-size: 35px; -fx-text-fill: blue;");
-		player2ScoreLabel.setStyle("-fx-font-size: 35px; -fx-text-fill: red;");
-		drawsLabel.setStyle("-fx-font-size: 35px; -fx-text-fill: gray;");
-		scoreText.setStyle("-fx-font-size: 35px; -fx-text-fill: black;");
+		player1ScoreLabel.setStyle("-fx-background-color: white;-fx-font-size: 35px; -fx-text-fill: blue;");
+		player2ScoreLabel.setStyle("-fx-background-color: white;-fx-font-size: 35px; -fx-text-fill: red;");
+		drawsLabel.setStyle("-fx-background-color: white;-fx-font-size: 35px; -fx-text-fill: gray;");
+		scoreText.setStyle("-fx-background-color: white;-fx-font-size: 35px; -fx-text-fill: black;");
 
 		HBox scoreBox = new HBox(100, player1ScoreLabel, drawsLabel, player2ScoreLabel);
 		scoreBox.setAlignment(Pos.TOP_CENTER);
 		scoreText.setAlignment(Pos.TOP_CENTER);
-		scoreBox.setStyle("-fx-font-size: 35px;");
+		scoreBox.setStyle("-fx-background-color: white; -fx-font-size: 35px;");
 
 		// this is to have the SCORE text along with player score aligned at the top
 		VBox scoreLayout = new VBox(scoreText, scoreBox);
@@ -259,8 +268,9 @@ public class TicTacToe extends Application{
 		gameLayout.setCenter(centerLayout);
 		gameLayout.setLeft(buttonBox);
 		gameLayout.setRight(spacer);
-
-		Scene gameScene = new Scene(gameLayout);
+		
+		gameBackground.getChildren().addAll(imageView, gameLayout);
+		Scene gameScene = new Scene(gameBackground);
 		primaryStage.setScene(gameScene);
 		primaryStage.setMaximized(false);
 		primaryStage.setMaximized(true);
@@ -292,6 +302,7 @@ public class TicTacToe extends Application{
 				try {
 					Media media = new Media(new File("src/game/WinnerSoundEffect.mp3").toURI().toString());
 					mediaPlayer = new MediaPlayer(media);
+					mediaPlayer.setVolume(0.1);
 					mediaPlayer.play();
 				} catch (Exception e) {
 					e.printStackTrace();
@@ -478,6 +489,7 @@ public class TicTacToe extends Application{
 					player1ScoreLabel.setText("Player 1: " + player1Score);
 					Media media = new Media(new File("src/game/WinnerSoundEffect.mp3").toURI().toString());
 					mediaPlayer = new MediaPlayer(media);
+					mediaPlayer.setVolume(0.22);
 					mediaPlayer.play();
 					gameOver = true;
 				} else {
@@ -487,6 +499,7 @@ public class TicTacToe extends Application{
 					player2ScoreLabel.setText("Player 2: " + player2Score);
 					Media media = new Media(new File("src/game/WinnerSoundEffect.mp3").toURI().toString());
 					mediaPlayer = new MediaPlayer(media);
+					mediaPlayer.setVolume(0.22);
 					mediaPlayer.play();
 					gameOver = true;
 				}
