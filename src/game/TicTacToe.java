@@ -118,7 +118,7 @@ public class TicTacToe extends Application{
 	private void showDifficultySelector(Stage primaryStage) {
 		primaryStage.setTitle("Tic-Tac-Toe: Difficulty Selector");
 		// create labels and buttons
-		Label titleLabel = new Label("Choose the Difficulty");
+		Label titleLabel = new Label("Choose Your Difficulty");
 		Button easyModeButton = new Button("Easy");
 		Button hardModeButton = new Button("Hard");
 		Image difficultySelector = new Image("file:src/game/difficultySelector.jpeg");
@@ -143,7 +143,8 @@ public class TicTacToe extends Application{
 		// making text/buttons bigger
 		easyModeButton.setStyle("-fx-font-size: 20px; -fx-padding: 10px 20px; -fx-pref-width: 250px; -fx-pref-height: 100px;");
 		hardModeButton.setStyle("-fx-font-size: 20px; -fx-padding: 10px 20px; -fx-pref-width: 250px; -fx-pref-height: 100px;");
-		titleLabel.setStyle("-fx-font-size: 35px; -fx-text-fill: black;");
+//		titleLabel.setStyle("-fx-font-size: 35px; -fx-text-fill: black;");
+		titleLabel.setStyle("-fx-background-color: white; -fx-font-size: 50px; -fx-font-weight: bold;");
 		
 		background.getChildren().addAll(imageView, screenLayout);
 		Scene mainMenu = new Scene(background, 400, 300);
