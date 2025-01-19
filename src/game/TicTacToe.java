@@ -69,7 +69,7 @@ public class TicTacToe extends Application{
 	 */
 	private void showMainMenu(Stage primaryStage) {
 		primaryStage.setTitle("Tic-Tac-Toe: Main Menu");
-		// resets scores to 0 when going to the main menu instead of restarting the same gamemode
+		// Resets scores to 0 when going back to the main menu.
 		player1Score = 0;
 		player2Score = 0;
 		Label titleLabel = new Label("Select Game Mode");
@@ -88,7 +88,7 @@ public class TicTacToe extends Application{
 		} catch(Exception e) {
 			e.printStackTrace();
 		}  
-		
+
 
 		singlePlayerButton.setOnAction(e -> {
 			showDifficultySelector(primaryStage);
@@ -117,14 +117,14 @@ public class TicTacToe extends Application{
 	 */
 	private void showDifficultySelector(Stage primaryStage) {
 		primaryStage.setTitle("Tic-Tac-Toe: Difficulty Selector");
-		// create labels and buttons
+		// Create labels, buttons and images.
 		Label titleLabel = new Label("Choose Your Difficulty");
 		Button easyModeButton = new Button("Easy");
 		Button hardModeButton = new Button("Hard");
 		Image difficultySelector = new Image("file:src/game/difficultySelector.jpeg");
 		ImageView imageView = new ImageView(difficultySelector);
 		StackPane background = new StackPane();
-		
+
 		easyModeButton.setOnAction(e -> {
 			gameMode = "singlePlayerEasy";
 			primaryStage.setTitle("Tic-Tac-Toe: Player vs Computer (Easy)");
@@ -140,12 +140,11 @@ public class TicTacToe extends Application{
 		VBox screenLayout = new VBox(500, titleLabel, buttonBox);
 		screenLayout.setAlignment(Pos.TOP_CENTER);
 
-		// making text/buttons bigger
+		// Customize the buttons and labels
 		easyModeButton.setStyle("-fx-font-size: 20px; -fx-padding: 10px 20px; -fx-pref-width: 250px; -fx-pref-height: 100px;");
 		hardModeButton.setStyle("-fx-font-size: 20px; -fx-padding: 10px 20px; -fx-pref-width: 250px; -fx-pref-height: 100px;");
-//		titleLabel.setStyle("-fx-font-size: 35px; -fx-text-fill: black;");
 		titleLabel.setStyle("-fx-background-color: white; -fx-font-size: 50px; -fx-font-weight: bold;");
-		
+
 		background.getChildren().addAll(imageView, screenLayout);
 		Scene mainMenu = new Scene(background, 400, 300);
 		primaryStage.setScene(mainMenu);
@@ -159,60 +158,59 @@ public class TicTacToe extends Application{
 	 * @param primaryStage The primary stage for this application.
 	 */
 	private void startGame(Stage primaryStage) {
-		// reset to player 1's turn and resets the board
+		// Reset to player 1's turn and resets the board
 		resetBoard();
 		player1Turn = true; 
 		statusLabel.setText("Player 1's Turn (X)");
 		gameOver = false;
+		// Creates images
 		Image XObackground = new Image("file:src/game/XObackground.jpg");
 		ImageView imageView = new ImageView(XObackground);
 		StackPane gameBackground = new StackPane();
 
-		// different names for players depending on game mode
+		// Different names for players depending on game mode
 		if(gameMode.equals("twoPlayer")) {
 			player1ScoreLabel = new Label("Player 1: " + player1Score);
 			player2ScoreLabel = new Label("Player 2: " + player2Score);
 			drawsLabel = new Label("Draws: " + draws);
 		} 
-		// singlePlayerEasy or singlePlayerHard
+		// singlePlayerEasy or singlePlayerHard (Player vs Computer)
 		else { 
-			// attempts to align them better by using string.format to reserve space because player is shorter than computer
+			// Attempts to align them better by using string.format to reserve space because player is shorter than computer
 			player1ScoreLabel = new Label(String.format("%11s %d", "Player:", player1Score));
 			player2ScoreLabel = new Label(String.format("%11s %d", "Computer:", player2Score));
 			drawsLabel = new Label(String.format("%11s %d", "Draws:", draws));
 		}
-		
+
 		gridPane = new GridPane();
 		gameLayout = new BorderPane();
 		gridPane.setAlignment(Pos.CENTER);
 		gridPane.setGridLinesVisible(true);
-		gridPane.setStyle("-fx-font-size: 115px;"); // makes the text of the grid bigger (the X's and O's)
-		statusLabel.setStyle("-fx-background-color: white; -fx-font-size: 25px; -fx-font-weight: bold;"); // makes the text of the statusLabel bigger and makes it bold
+		gridPane.setStyle("-fx-font-size: 115px;"); // Makes the text of the grid bigger (the X's and O's)
+		statusLabel.setStyle("-fx-background-color: white; -fx-font-size: 25px; -fx-font-weight: bold;"); // Makes the text of the statusLabel bigger, bold and adds a background
 
 		// creates the buttons
 		for (int i = 0; i<3; i++) {
 			for (int j = 0; j<3; j++) {
-				// for some reason there were errors if i used row and column as variables in the for loops
+				// For some reason there were errors if row and column were used as variables in the for loops and having set variables looks better than i and j
 				int row = i;
 				int column = j;
 				Button square = new Button();
 				square.setPrefSize(250, 250); // 250x250px button
 				buttons[row][column] = square; // the buttons[][] array is for the AI to make the right move visually
-				gridPane.add(square, column, row); // gridpane.add uses (column, row) instead of the usual (row, column)
-				//				gridPane.add(square, row, column);
+				gridPane.add(square, column, row); // gridpane.add uses (column, row) instead of (row, column). this was the main issue for a while
+
 				try {
 					square.setOnAction(e ->{
 						if(gameMode.equals("twoPlayer")) {
-							// test case, prints the row and column of the button clicked
 							twoPlayerMove(square, row, column, primaryStage);
-
+							// Click sounds
 							Media media = new Media(new File("src/game/CartoonClickSound.mp3").toURI().toString());
 							mediaPlayer = new MediaPlayer(media);
 							mediaPlayer.play();
 						}else {
-							// test case, prints the row and column of the button clicked
 							singlePlayerMove(square,row,column,primaryStage);
-
+							// Click sounds
 							Media media = new Media(new File("src/game/CartoonClickSound.mp3").toURI().toString());
 							mediaPlayer = new MediaPlayer(media);
 							mediaPlayer.play();
@@ -223,43 +221,42 @@ public class TicTacToe extends Application{
 				}
 			}
 		}
-		// reserve space for the button box on the left to prevent it from moving the board when shown later
+		// Reserve space for the button box on the left to prevent it from moving the board when shown later
 		buttonBox.setAlignment(Pos.CENTER_LEFT);
 		buttonBox.setStyle("-fx-padding: 20;"); // spacing from the wall
 		buttonBox.setPrefWidth(500); // reserve space on the left
 		buttonBox.getChildren().clear(); // empty the left side 
 
-		// this allows the board to be in the exact center of the screen since there is now a 200 px reserve on both sides from the buttonBox and this spacer
+		// This allows the board to be in the exact center of the screen by also reserving 500px on the right side to account for the 500px of the buttonBox
 		VBox spacer = new VBox(10);
 		spacer.setAlignment(Pos.CENTER_RIGHT);
 		spacer.setPrefWidth(500);
-		spacer.setStyle("-fx-padding: 20;"); // spacing from the wall
-		spacer.getChildren().clear(); // empty the right side 
-		// add score labels at the top and change the colours of them
+		// Add score labels at the top and customize them
 		Label scoreText = new Label("SCORES");
 		player1ScoreLabel.setStyle("-fx-background-color: white;-fx-font-size: 35px; -fx-text-fill: blue;");
 		player2ScoreLabel.setStyle("-fx-background-color: white;-fx-font-size: 35px; -fx-text-fill: red;");
 		drawsLabel.setStyle("-fx-background-color: white;-fx-font-size: 35px; -fx-text-fill: gray;");
 		scoreText.setStyle("-fx-background-color: white;-fx-font-size: 35px; -fx-text-fill: black; -fx-font-weight: bold;");
 
+		// HBox for left to right alignment
 		HBox scoreBox = new HBox(100, player1ScoreLabel, drawsLabel, player2ScoreLabel);
 		scoreBox.setAlignment(Pos.TOP_CENTER);
 		scoreText.setAlignment(Pos.TOP_CENTER);
 		scoreBox.setStyle("-fx-background-color: white; -fx-font-size: 35px; -fx-font-weight: bold;");
 
-		// this is to have the SCORE text along with player score aligned at the top
+		// Aligns the "SCORE" text and the player score
 		VBox scoreLayout = new VBox(scoreText, scoreBox);
 		scoreLayout.setAlignment(Pos.CENTER);
 		centerLayout = new VBox(gridPane, statusLabel);
 
 		centerLayout.setAlignment(Pos.CENTER);
 
-		// adds all VBox's/HBox's to a BorderPane for organization
+		// Adds all VBox's/HBox's to a BorderPane for organization
 		gameLayout.setTop(scoreLayout);
 		gameLayout.setCenter(centerLayout);
 		gameLayout.setLeft(buttonBox);
 		gameLayout.setRight(spacer);
-		
+
 		gameBackground.getChildren().addAll(imageView, gameLayout);
 		Scene gameScene = new Scene(gameBackground);
 		primaryStage.setScene(gameScene);
@@ -282,6 +279,7 @@ public class TicTacToe extends Application{
 			board[row][column] = 'X'; // player move is always X
 			square.setText("X");
 			square.setStyle("-fx-text-fill: blue;");
+			// Test case
 			System.out.println("Player: 'X' placed at (" + row + "," + column +").");
 
 
@@ -299,14 +297,14 @@ public class TicTacToe extends Application{
 					e.printStackTrace();
 				}
 				showRestart(primaryStage);
-				return;  // exits the method early to not run the computers turn
+				return;  // Exits the method early to not run the computers turn if the player wins
 			} else if (isBoardFull(false)) {
 				statusLabel.setText("It's a Draw!");
 				draws++;
 				drawsLabel.setText(String.format("%11s %d", "Draws:", draws));
 				gameOver = true;
 				showRestart(primaryStage);
-				return; // exits the method early to not run the computers turn
+				return; // Exits the method early to not run the computers turn if the board is full
 			}
 			// computer's turn
 			computerMove(primaryStage);
@@ -323,30 +321,32 @@ public class TicTacToe extends Application{
 	private void computerMove(Stage primaryStage) {
 		if (!gameOver) {
 			int row, col;
-			// easy mode
+			// Easy mode
 			if(gameMode.equals("singlePlayerEasy")) {
-				// keeps randomly choosing a row and column until it finds an empty square 
+				// Keeps randomly choosing a row and column until it finds an empty square 
 				do {
 					row = (int) (Math.random() * 3);
 					col = (int) (Math.random() * 3);
 				} while (board[row][col] != ' '); // keeps searching until an empty square is found
-				// hard mode, finds the best move using the minimax algorithm
-			} else {
-				int[] bestMove = findBestMove(); // index 0 of the array is row, index 1 is column
+
+			} 
+			// Hard mode, finds the best move using the minimax algorithm
+			else {
+				int[] bestMove = findBestMove(); // Index 0 of the array is row, index 1 is column
 				row = bestMove[0];
 				col = bestMove[1];
 			}
-			// place the computer's move ('O') in the selected square
+			// Place the computer's move ('O') in the selected square
 			board[row][col] = 'O';
-			// makes a local variable to hold the button at (row,col) in the grid which allows us to edit it
+			// Makes a local variable to hold the button at (row,col) in the grid which allows us to edit it
 			Button square = buttons[row][col];
 			square.setText("O");
 			square.setStyle("-fx-text-fill: red;");
 
-			// test case
+			// Test case
 			System.out.println("Computer: 'O' placed at (" + row + "," + col + ").");
 
-			// check if the computer wins after making the move
+			// Check game state after the computers move
 			if (checkWin('O', false)) {
 				statusLabel.setText("Computer Wins!");
 				player2Score++;
@@ -373,41 +373,42 @@ public class TicTacToe extends Application{
 	 * @return              The score for the current move based on the game state.
 	 */
 	private int minimax(int moves, boolean computerTurn) {
-		// The minimax algorithm evaluates all possible moves and returns the move that maximizes the AI's chances of winning while minimizing the player's chance
+		// The minimax algorithm recursively evaluates all possible moves and returns the move score that maximizes the AI's chances of winning while minimizing the player's chance
 
-		// base cases
+		// Base cases
 		if (checkWin('O', true)) return 10 - moves; // AI wins, scores higher for faster wins (fewer moves)
 		if (checkWin('X', true)) return moves - 10; // Player wins, scores lower for slower wins (more moves)
 		if (isBoardFull(true)) return 0; // Draw, no winner, no score
 
 		if (computerTurn) {
-			int bestScore = -1000; // worst possible score for the AI
-			// goes through all possible moves
+			int bestScore = -1000; // Worst possible score for the AI
+			// Goes through all possible moves
 			for (int row = 0; row < 3; row++) {
 				for (int col = 0; col < 3; col++) {
 					if (board[row][col] == ' ') {
 						board[row][col] = 'O';
-						// AI is trying to maximize its score by recursively calling minimax to evaluate the score after this move
-						int score = minimax(moves + 1, false); // swaps to the opponent players turn
-						board[row][col] = ' '; // undos the move once the recursion above is fully completed
-						bestScore = Math.max(bestScore, score); // the ai wants to maximize its score, so it takes the higher value of the two
+	                    // AI is trying to maximize its score by recursively calling minimax for the opponent's turn
+						int score = minimax(moves + 1, false); // Swaps to the opponent players turn
+						board[row][col] = ' '; // Undos the move once the recursion above is fully completed
+						bestScore = Math.max(bestScore, score); // The AI wants to maximize its score
 					}
 				}
 			}
-			return bestScore; // returns the best score for the AI
+			return bestScore; // Returns the best score for the AI
 		} else {
-			int bestScore = 1000; // worst possible score for the player
+			int bestScore = 1000; // Worst possible score for the player (The AI wants the player to have the lowest score)
 			for (int row = 0; row < 3; row++) {
 				for (int col = 0; col < 3; col++) {
 					if (board[row][col] == ' ') {
 						board[row][col] = 'X';
-						int score = minimax(moves + 1, true); // after the player makes a move, it goes back to the AI's turn
-						board[row][col] = ' '; // undos the move once the recursion above is fully completed
-						bestScore = Math.min(bestScore, score); // player wants to minimize the AI's score
+	                    // After the player moves, it recursively evaluates the AI's turn
+						int score = minimax(moves + 1, true);
+						board[row][col] = ' '; // Undos the move once the recursion above is fully completed
+						bestScore = Math.min(bestScore, score); // Player wants to minimize the AI's score
 					}
 				}
 			}
-			return bestScore; // returns the best score for the player
+			return bestScore; // Returns the best score for the player
 		}
 	}
 	/**
@@ -417,19 +418,19 @@ public class TicTacToe extends Application{
 	 * @return An array where index 0 is the row and index 1 is the column of the best move.
 	 */
 	private int[] findBestMove() {
-		int bestScore = -1000; //   worst possible score for the AI
-		int[] bestMove = new int[2]; // array to store the best move (row, column)
+		int bestScore = -1000; //   Worst possible score for the AI
+		int[] bestMove = new int[2]; // Array to store the best move (row, column)
 
 		// Loop through all squares on the board
 		for (int row = 0; row < 3; row++) {
 			for (int col = 0; col < 3; col++) {
-				if (board[row][col] == ' ') { // checks for empty squares
-					board[row][col] = 'O'; // places a temporary move for the minimax algorithm
-					// evaluate the move using the minimax algorithm
-					int score = minimax(0, false); // 0 for moves, false because it's the player's turn next
-					board[row][col] = ' '; // undo the move after recursion
+				if (board[row][col] == ' ') { 
+					board[row][col] = 'O'; // Places a temporary move for the minimax algorithm
+					// Evaluate the move using the minimax algorithm
+					int score = minimax(0, false); // Moves starts at 0
+					board[row][col] = ' '; // Undo the move after recursion
 
-					// if this move has a better score, update the bestScore and store the move
+					// If this move has a better score, update the bestScore and store the move
 					if (score > bestScore) {
 						bestScore = score;
 						bestMove[0] = row;
@@ -439,7 +440,7 @@ public class TicTacToe extends Application{
 			}
 		}
 
-		return bestMove; // returns the best move found with index 0 being[row] and index 1 being [col]
+		return bestMove; // Returns the best move found with index 0 being[row] and index 1 being [col]
 	}
 	/**
 	 * Handles a move in two-player mode. Alternates between Player 1 ('X') and Player 2 ('O') turns.
@@ -454,7 +455,7 @@ public class TicTacToe extends Application{
 		// if the square is empty and the game isn't over
 		if(board[row][column] == ' ' && !gameOver) {
 			char currentPlayer;
-			// if its player 1's turn
+			// If its player 1's turn
 			if(player1Turn) {
 				currentPlayer = 'X';
 				square.setStyle("-fx-text-fill: blue;");  // set the color for X to blue
@@ -463,18 +464,18 @@ public class TicTacToe extends Application{
 				square.setStyle("-fx-text-fill: red;");   // set the color for O to red
 			}
 
-			// adds the move to the 2d array which will be used to check who wins later
+			// Adds the move to the 2d array which will be used to check who wins later
 			board[row][column] = currentPlayer;
-			// changes the visible grid to the player move
-			square.setText(String.valueOf(currentPlayer)); // string.valueof converts the char to a string because .setText needs a string
+			// Updates the board visually
+			square.setText(String.valueOf(currentPlayer)); // String.valueOf() converts the char to a string because .setText needs a string
 
-			// test case
+			// Test case
 			System.out.println("'" + currentPlayer + "' placed at (" + row + "," + column +").");
 
 			if(checkWin(currentPlayer, false)) {
 				if(player1Turn) {
 					statusLabel.setText("Player 1 Wins!");
-					// updates score
+					// Updates score and plays a win sound
 					player1Score++;
 					player1ScoreLabel.setText("Player 1: " + player1Score);
 					Media media = new Media(new File("src/game/WinnerSoundEffect.mp3").toURI().toString());
@@ -484,7 +485,7 @@ public class TicTacToe extends Application{
 					gameOver = true;
 				} else {
 					statusLabel.setText("Player 2 Wins!");
-					// updates score
+					// Updates score and plays a win sound
 					player2Score++;
 					player2ScoreLabel.setText("Player 2: " + player2Score);
 					Media media = new Media(new File("src/game/WinnerSoundEffect.mp3").toURI().toString());
@@ -501,8 +502,8 @@ public class TicTacToe extends Application{
 				gameOver = true;
 				showRestart(primaryStage);
 
-			} else { // if there isn't any wins/draws continue and display whos turn it is
-				player1Turn =! player1Turn; // switches turns
+			} else { // If there isn't any wins/draws continue and display whos turn it is
+				player1Turn =! player1Turn; // Switches turns
 				if(player1Turn) {
 					statusLabel.setText("Player 1's Turn (X)");
 				} else {
@@ -525,44 +526,42 @@ public class TicTacToe extends Application{
 
 		for (int i = 0; i<3; i++) {
 
-			// rows
+			// Rows
 			if(board[i][0] == player && board[i][1] == player && board [i][2] == player ) {
-				// if it isnt being called by the minimax algorithm, draw the winning line
+				// If it isn't being called by the minimax algorithm, draw the winning line
 				if(!minimax) { 
 					drawWinningLine(i,-1, player); 
-					// test case
+					// Test case
 					System.out.println("'" + player + "' wins on row index " + i);
 				}
 				return true;
 			}
 			// columns
 			if(board[0][i] == player && board[1][i] == player && board [2][i] == player ) {
-				// if it isnt being called by the minimax algorithm, draw the winning line
+				// If it isn't being called by the minimax algorithm, draw the winning line
 				if(!minimax) {
 					drawWinningLine(-1,i, player);
-					// test case
+					// Test case
 					System.out.println("'" + player + "' wins on column index " + i);
 				}
 				return true;
 			}
 
-
-
-			// diagonal
+			// Diagonals
 			if(board[0][0] == player && board[1][1] == player && board[2][2] == player) {
-				// if it isnt being called by the minimax algorithm, draw the winning line
+				// If it isn't being called by the minimax algorithm, draw the winning line
 				if(!minimax) {
 					drawWinningLine(0, 0, player); 
-					// test case
+					// Test case
 					System.out.println("'" + player + "' wins on the main diagonal (top left to bottom right)");
 				}
 				return true;
 			}
 			if(board[0][2] == player && board[1][1] == player && board[2][0] == player) {
-				// if it isnt being called by the minimax algorithm, draw the winning line
+				// If it isn't being called by the minimax algorithm, draw the winning line
 				if(!minimax) { 
 					drawWinningLine(0, 2, player); 
-					// test case
+					// Test case
 					System.out.println("'" + player + "' wins on the anti-diagonal (top right to bottom left)");
 				}
 				return true;
@@ -575,11 +574,11 @@ public class TicTacToe extends Application{
 	 * This method checks every square on the board to determine if there are any empty spaces left.
 	 *
 	 * @param minimax   A boolean indicating whether the method is being called by the minimax algorithm.
-	 *                  If true, the test case wont run.
+	 *                  If true, the test case won't run.
 	 * @return True if the board is full, false otherwise.
 	 */
 	public boolean isBoardFull(boolean minimax) {
-		// checks the entire board for any empty square, returns false if it finds one
+		// Checks the entire board for any empty square, returns false if it finds one
 		for (int i = 0; i < 3; i++) {
 			for (int j = 0; j<3; j++) {
 				if(board[i][j] == ' ') {
@@ -587,7 +586,7 @@ public class TicTacToe extends Application{
 				}
 			}
 		}
-		// test case, only print if it isnt called by the minimax algoritm
+		// Test case, only print if it isn't called by the minimax algoritm
 		if(!minimax) System.out.println("The board is full (no possible moves).");
 		return true;
 	}
@@ -616,12 +615,10 @@ public class TicTacToe extends Application{
 		Button exitButton = new Button("Exit");
 
 		mainMenuButton.setOnAction(e -> {
-			resetBoard();
-			showMainMenu(primaryStage); // back to main menu
+			showMainMenu(primaryStage);
 		});
 
 		restartButton.setOnAction(e -> {
-			resetBoard();
 			startGame(primaryStage);
 		});
 
@@ -629,17 +626,16 @@ public class TicTacToe extends Application{
 			primaryStage.close();
 		});
 
-		// bigger font, not touching the wall
+		// Bigger font, not touching the wall
 		mainMenuButton.setStyle("-fx-font-size: 20px; -fx-padding: 10px 20px; -fx-pref-width: 250px; -fx-pref-height: 100px;");
 		restartButton.setStyle("-fx-font-size: 20px; -fx-padding: 10px 20px; -fx-pref-width: 250px;-fx-pref-height: 100px;");
 		exitButton.setStyle("-fx-font-size: 20px; -fx-padding: 10px 20px; -fx-pref-width: 250px;-fx-pref-height: 100px;");
 
-		// add buttons to the left side
-		buttonBox.getChildren().clear(); // makes sure it doesn't overflow if the method is called multiple times
+		// Add buttons to the left side
 		buttonBox.getChildren().addAll(mainMenuButton, restartButton, exitButton);
 		buttonBox.setAlignment(Pos.CENTER_LEFT);
-		buttonBox.setSpacing(100); // add spacing between buttons
-		buttonBox.setStyle("-fx-padding: 30px;"); // add spacing from the side
+		buttonBox.setSpacing(100); // Add spacing between buttons
+		buttonBox.setStyle("-fx-padding: 40px;"); // Add spacing from the side
 
 	}
 	/**
@@ -653,12 +649,12 @@ public class TicTacToe extends Application{
 	public void drawWinningLine(int row, int column, char player) {
 		Line line = new Line();
 
-		// allows us to modify/take values from the top left button so we can make the lines work regardless of screen size/resolution
+		// Allows us to modify/take values from the top left button so we can make the lines work regardless of screen size/resolution
 		Button topLeftButton = buttons[0][0];
-		// i dont know why this works but i found it online, it seems to allow us to take the relative position of the buttons inside of the window/scene so we can make it work for all screen sizes
+		// I don't know why this works but I found it online, it seems to allow us to take the relative position of the buttons inside of the window/scene so we can make it work for all screen sizes
 		Bounds buttonBounds = topLeftButton.localToScene(topLeftButton.getBoundsInLocal());
 
-		// top left x and y position
+		// Top left X and Y position
 		double gridX = buttonBounds.getMinX(); 
 		double gridY = buttonBounds.getMinY();
 
@@ -668,8 +664,10 @@ public class TicTacToe extends Application{
 		double gridWidth = cellWidth * 3;
 		double gridHeight = cellHeight * 3;
 
-
-		System.out.println("gridX: " + gridX + ", gridY: " + gridY);
+		// Test case, prints the top left X and Y coordinates of the button
+		System.out.println("Top left button X and Y coordinates: X: " + gridX + ", Y: " + gridY);
+		
+		// Rows
 		if(row == 0 && column == -1) {
 			line = new Line(gridX, gridY + cellHeight / 2, gridX + gridWidth, gridY + cellHeight / 2);			
 		}
@@ -679,7 +677,7 @@ public class TicTacToe extends Application{
 		if(row == 2 && column == -1) {
 			line = new Line(gridX, gridY + cellHeight * 2.5, gridX + gridWidth, gridY + cellHeight * 2.5);
 		}
-		// columns
+		// Columns
 		if(row == -1 && column == 0) {
 			line = new Line(gridX + cellWidth / 2, gridY, gridX + cellWidth / 2, gridY + gridHeight);
 		}
@@ -692,20 +690,20 @@ public class TicTacToe extends Application{
 			line = new Line(gridX + cellWidth * 2.5, gridY, gridX + cellWidth * 2.5, gridY + gridHeight);
 		}
 
-		// diagonals
+		// Diagonals
 
-		// main diagonal (top left to bottom right)
+		// Main diagonal (top left to bottom right)
 		if(row == 0 && column == 0) {
 			line = new Line(gridX, gridY, gridX + cellWidth * 3, gridY + cellHeight * 3);
 		}
-		// anti-diagonal (top right to bottom left)
+		// Anti-diagonal (top right to bottom left)
 		if(row == 0 && column == 2) {
 			line = new Line(gridX + cellWidth * 3, gridY, gridX, gridY + cellHeight * 3);
 		}
 
 
 		line.setStrokeWidth(10); // thicker line
-		// changes colour of the line depending on who won
+		// Changes colour of the line depending on who won
 		if(player == 'X') line.setStroke(Color.DODGERBLUE);
 		if(player == 'O') line.setStroke(Color.INDIANRED);
 		gameLayout.getChildren().add(line);
