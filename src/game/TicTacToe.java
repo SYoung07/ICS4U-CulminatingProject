@@ -8,6 +8,8 @@ import javafx.geometry.Pos;
 import javafx.scene.Scene;
 import javafx.scene.control.Button;
 import javafx.scene.control.Label;
+import javafx.scene.image.Image;
+import javafx.scene.image.ImageView;
 import javafx.scene.layout.BorderPane;
 import javafx.scene.layout.GridPane;
 import javafx.scene.layout.HBox;
@@ -66,6 +68,7 @@ public class TicTacToe extends Application{
 	 * @param primaryStage The primary stage for this application. 
 	 */
 	private void showMainMenu(Stage primaryStage) {
+		primaryStage.setTitle("Tic-Tac-Toe: Main Menu");
 		// resets scores to 0 when going to the main menu instead of restarting the same gamemode
 		player1Score = 0;
 		player2Score = 0;
@@ -85,7 +88,7 @@ public class TicTacToe extends Application{
 		} catch(Exception e) {
 			e.printStackTrace();
 		}  
-		primaryStage.setTitle("Tic-Tac-Toe: Main Menu");
+		
 
 		singlePlayerButton.setOnAction(e -> {
 			showDifficultySelector(primaryStage);
@@ -113,11 +116,8 @@ public class TicTacToe extends Application{
 	 * @param primaryStage The primary stage for this application. 
 	 */
 	private void showDifficultySelector(Stage primaryStage) {
-		// create labels and buttons
-		
-		
 		primaryStage.setTitle("Tic-Tac-Toe: Difficulty Selector");
-
+		// create labels and buttons
 		Label titleLabel = new Label("Choose the Difficulty");
 		Button easyModeButton = new Button("Easy");
 		Button hardModeButton = new Button("Hard");
@@ -144,8 +144,6 @@ public class TicTacToe extends Application{
 		easyModeButton.setStyle("-fx-font-size: 20px; -fx-padding: 10px 20px; -fx-pref-width: 250px; -fx-pref-height: 100px;");
 		hardModeButton.setStyle("-fx-font-size: 20px; -fx-padding: 10px 20px; -fx-pref-width: 250px; -fx-pref-height: 100px;");
 		titleLabel.setStyle("-fx-font-size: 35px; -fx-text-fill: black;");
-		// add a (cracked?)line down the center to separate easy and hard modes with different backgrounds for each (damjan sketch) - NATHANS JOB
-		// maybe add a unique background for each side (damjan sketch) maybe nathans job if he can figure it out
 		
 		background.getChildren().addAll(imageView, screenLayout);
 		Scene mainMenu = new Scene(background, 400, 300);
@@ -177,11 +175,6 @@ public class TicTacToe extends Application{
 		} 
 		// singlePlayerEasy or singlePlayerHard
 		else { 
-
-			//						player1ScoreLabel = new Label("Player: " + player1Score);
-			//						player2ScoreLabel = new Label("Computer: " + player2Score);
-			//						drawsLabel = new Label("Draws: " + draws);
-
 			// attempts to align them better by using string.format to reserve space because player is shorter than computer
 			player1ScoreLabel = new Label(String.format("%11s %d", "Player:", player1Score));
 			player2ScoreLabel = new Label(String.format("%11s %d", "Computer:", player2Score));
@@ -193,7 +186,7 @@ public class TicTacToe extends Application{
 		gridPane.setAlignment(Pos.CENTER);
 		gridPane.setGridLinesVisible(true);
 		gridPane.setStyle("-fx-font-size: 115px;"); // makes the text of the grid bigger (the X's and O's)
-		statusLabel.setStyle("-fx-background-color: yellow; -fx-font-size: 25px;"); // makes the text of the statusLabel bigger
+		statusLabel.setStyle("-fx-background-color: white; -fx-font-size: 25px; -fx-font-weight: bold;"); // makes the text of the statusLabel bigger and makes it bold
 
 		// creates the buttons
 		for (int i = 0; i<3; i++) {
@@ -246,12 +239,12 @@ public class TicTacToe extends Application{
 		player1ScoreLabel.setStyle("-fx-background-color: white;-fx-font-size: 35px; -fx-text-fill: blue;");
 		player2ScoreLabel.setStyle("-fx-background-color: white;-fx-font-size: 35px; -fx-text-fill: red;");
 		drawsLabel.setStyle("-fx-background-color: white;-fx-font-size: 35px; -fx-text-fill: gray;");
-		scoreText.setStyle("-fx-background-color: white;-fx-font-size: 35px; -fx-text-fill: black;");
+		scoreText.setStyle("-fx-background-color: white;-fx-font-size: 35px; -fx-text-fill: black; -fx-font-weight: bold;");
 
 		HBox scoreBox = new HBox(100, player1ScoreLabel, drawsLabel, player2ScoreLabel);
 		scoreBox.setAlignment(Pos.TOP_CENTER);
 		scoreText.setAlignment(Pos.TOP_CENTER);
-		scoreBox.setStyle("-fx-background-color: white; -fx-font-size: 35px;");
+		scoreBox.setStyle("-fx-background-color: white; -fx-font-size: 35px; -fx-font-weight: bold;");
 
 		// this is to have the SCORE text along with player score aligned at the top
 		VBox scoreLayout = new VBox(scoreText, scoreBox);
@@ -372,7 +365,7 @@ public class TicTacToe extends Application{
 	}
 	/**
 	 * Implements the minimax algorithm to evaluate the best move for the computer.
-	 * This method is called recursively to explore all possible moves and returns the score for each move.
+	 * This method is called recursively to test all possible moves and returns the score for each move.
 	 *
 	 * @param moves         The number of moves made so far.
 	 * @param computerTurn  True if it's the computer's turn, false if it's the player's turn.
@@ -476,7 +469,6 @@ public class TicTacToe extends Application{
 
 			// test case
 			System.out.println("'" + currentPlayer + "' placed at (" + row + "," + column +").");
-
 
 			if(checkWin(currentPlayer, false)) {
 				if(player1Turn) {
@@ -622,7 +614,6 @@ public class TicTacToe extends Application{
 		Button restartButton = new Button("Restart");
 		Button exitButton = new Button("Exit");
 
-
 		mainMenuButton.setOnAction(e -> {
 			resetBoard();
 			showMainMenu(primaryStage); // back to main menu
@@ -641,8 +632,6 @@ public class TicTacToe extends Application{
 		mainMenuButton.setStyle("-fx-font-size: 20px; -fx-padding: 10px 20px; -fx-pref-width: 250px; -fx-pref-height: 100px;");
 		restartButton.setStyle("-fx-font-size: 20px; -fx-padding: 10px 20px; -fx-pref-width: 250px;-fx-pref-height: 100px;");
 		exitButton.setStyle("-fx-font-size: 20px; -fx-padding: 10px 20px; -fx-pref-width: 250px;-fx-pref-height: 100px;");
-
-
 
 		// add buttons to the left side
 		buttonBox.getChildren().clear(); // makes sure it doesn't overflow if the method is called multiple times
