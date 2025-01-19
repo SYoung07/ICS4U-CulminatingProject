@@ -3,12 +3,11 @@ package game;
 import java.io.File;
 
 import javafx.application.Application;
+import javafx.geometry.Bounds;
 import javafx.geometry.Pos;
 import javafx.scene.Scene;
 import javafx.scene.control.Button;
 import javafx.scene.control.Label;
-import javafx.scene.image.Image;
-import javafx.scene.image.ImageView;
 import javafx.scene.layout.BorderPane;
 import javafx.scene.layout.GridPane;
 import javafx.scene.layout.HBox;
@@ -175,10 +174,8 @@ public class TicTacToe extends Application{
 			player1ScoreLabel = new Label(String.format("%11s %d", "Player:", player1Score));
 			player2ScoreLabel = new Label(String.format("%11s %d", "Computer:", player2Score));
 			drawsLabel = new Label(String.format("%11s %d", "Draws:", draws));
-
 		}
-
-
+		
 		gridPane = new GridPane();
 		gameLayout = new BorderPane();
 		gridPane.setAlignment(Pos.CENTER);
@@ -225,15 +222,15 @@ public class TicTacToe extends Application{
 		}
 		// reserve space for the button box on the left to prevent it from moving the board when shown later
 		buttonBox.setAlignment(Pos.CENTER_LEFT);
-		buttonBox.setStyle("-fx-padding: 10;"); // spacing from the wall
-		buttonBox.setPrefWidth(250); // reserve space on the left
+		buttonBox.setStyle("-fx-padding: 20;"); // spacing from the wall
+		buttonBox.setPrefWidth(500); // reserve space on the left
 		buttonBox.getChildren().clear(); // empty the left side 
 
 		// this allows the board to be in the exact center of the screen since there is now a 200 px reserve on both sides from the buttonBox and this spacer
 		VBox spacer = new VBox(10);
 		spacer.setAlignment(Pos.CENTER_RIGHT);
-		spacer.setPrefWidth(250);
-		spacer.setStyle("-fx-padding: 10;"); // spacing from the wall
+		spacer.setPrefWidth(500);
+		spacer.setStyle("-fx-padding: 20;"); // spacing from the wall
 		spacer.getChildren().clear(); // empty the right side 
 		// add score labels at the top and change the colours of them
 		Label scoreText = new Label("SCORES");
@@ -374,9 +371,9 @@ public class TicTacToe extends Application{
 		// The minimax algorithm evaluates all possible moves and returns the move that maximizes the AI's chances of winning while minimizing the player's chance
 
 		// base cases
-		if (checkWin('O', true)) return 10 - moves; // AI wins, prefers faster wins by subtracting the amount of moves
-		if (checkWin('X', true)) return moves - 10; // player wins, prefers slower losses by adding the number of moves
-		if (isBoardFull(true)) return 0; // draw
+		if (checkWin('O', true)) return 10 - moves; // AI wins, scores higher for faster wins (fewer moves)
+		if (checkWin('X', true)) return moves - 10; // Player wins, scores lower for slower wins (more moves)
+		if (isBoardFull(true)) return 0; // Draw, no winner, no score
 
 		if (computerTurn) {
 			int bestScore = -1000; // worst possible score for the AI
@@ -388,7 +385,7 @@ public class TicTacToe extends Application{
 						// AI is trying to maximize its score by recursively calling minimax to evaluate the score after this move
 						int score = minimax(moves + 1, false); // swaps to the opponent players turn
 						board[row][col] = ' '; // undos the move once the recursion above is fully completed
-						bestScore = Math.max(bestScore, score); // the ai wants to maximize its score
+						bestScore = Math.max(bestScore, score); // the ai wants to maximize its score, so it takes the higher value of the two
 					}
 				}
 			}
@@ -652,40 +649,57 @@ public class TicTacToe extends Application{
 	 */
 	public void drawWinningLine(int row, int column, char player) {
 		Line line = new Line();
-		// rows
+
+		// allows us to modify/take values from the top left button so we can make the lines work regardless of screen size/resolution
+		Button topLeftButton = buttons[0][0];
+		// i dont know why this works but i found it online, it seems to allow us to take the relative position of the buttons inside of the window/scene so we can make it work for all screen sizes
+		Bounds buttonBounds = topLeftButton.localToScene(topLeftButton.getBoundsInLocal());
+
+		// top left x and y position
+		double gridX = buttonBounds.getMinX(); 
+		double gridY = buttonBounds.getMinY();
+
+		double cellWidth = buttonBounds.getWidth(); 
+		double cellHeight = buttonBounds.getHeight(); 
+
+		double gridWidth = cellWidth * 3;
+		double gridHeight = cellHeight * 3;
+
+
+		System.out.println("gridX: " + gridX + ", gridY: " + gridY);
 		if(row == 0 && column == -1) {
-			line = new Line(500, 290, 1425, 290);
+			line = new Line(gridX, gridY + cellHeight / 2, gridX + gridWidth, gridY + cellHeight / 2);			
 		}
 		if(row == 1 && column == -1) {
-			line = new Line(500, 540, 1425, 540);
+			line = new Line(gridX, gridY + cellHeight * 1.5, gridX + gridWidth, gridY + cellHeight * 1.5);	
 		}
 		if(row == 2 && column == -1) {
-			line = new Line(500, 790, 1425, 790);
+			line = new Line(gridX, gridY + cellHeight * 2.5, gridX + gridWidth, gridY + cellHeight * 2.5);
 		}
-
 		// columns
 		if(row == -1 && column == 0) {
-			line = new Line(710, 125, 710, 965);
+			line = new Line(gridX + cellWidth / 2, gridY, gridX + cellWidth / 2, gridY + gridHeight);
 		}
 
 		if(row == -1 && column == 1) {
-			line = new Line(960, 125, 960, 965);
+			line = new Line(gridX + cellWidth * 1.5, gridY, gridX + cellWidth * 1.5, gridY + gridHeight);
 		}
 
 		if(row == -1 && column == 2) {
-			line = new Line(1210, 125, 1210, 965);
+			line = new Line(gridX + cellWidth * 2.5, gridY, gridX + cellWidth * 2.5, gridY + gridHeight);
 		}
 
 		// diagonals
 
 		// main diagonal (top left to bottom right)
 		if(row == 0 && column == 0) {
-			line = new Line(585, 165, 1335, 915);	
+			line = new Line(gridX, gridY, gridX + cellWidth * 3, gridY + cellHeight * 3);
 		}
 		// anti-diagonal (top right to bottom left)
 		if(row == 0 && column == 2) {
-			line = new Line(1335, 165, 585, 915);
+			line = new Line(gridX + cellWidth * 3, gridY, gridX, gridY + cellHeight * 3);
 		}
+
 
 		line.setStrokeWidth(10); // thicker line
 		// changes colour of the line depending on who won
