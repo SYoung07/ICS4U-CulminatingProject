@@ -77,7 +77,7 @@ public class TicTacToe extends Application{
 		Button twoPlayerButton = new Button("Two Player");
 		singlePlayerButton.setStyle("-fx-font-size: 20px; -fx-padding: 10px 20px; -fx-pref-width: 250px; -fx-pref-height: 100px;");
 		twoPlayerButton.setStyle("-fx-font-size: 20px; -fx-padding: 10px 20px; -fx-pref-width: 250px; -fx-pref-height: 100px;");
-		titleLabel.setStyle("-fx-font-size: 35px; -fx-text-fill: black;");
+		titleLabel.setStyle("-fx-background-color: white;-fx-font-size: 35px; -fx-text-fill: black;-fx-font-weight: bold;");
 		primaryStage.setTitle("Main Menu");
 
 		try {
@@ -102,12 +102,12 @@ public class TicTacToe extends Application{
 		VBox modeSelection = new VBox(30, titleLabel, singlePlayerButton,twoPlayerButton);
 		modeSelection.setAlignment(Pos.CENTER);
 		
-//		Image mainMenuBackground = new Image("file:src/game/difficultySelector.pdn");
-//		ImageView imageView = new ImageView(mainMenuBackground);
-//		StackPane background = new StackPane();
-		
-		
-		Scene mainMenu = new Scene(modeSelection, 400, 300);
+		Image XObackground = new Image("file:src/game/XObackground.jpg");
+		ImageView imageView = new ImageView(XObackground);
+		StackPane gameBackground = new StackPane();
+	
+		gameBackground.getChildren().addAll(imageView, modeSelection);
+		Scene mainMenu = new Scene(gameBackground, 400, 300);
 		primaryStage.setScene(mainMenu);
 
 		primaryStage.setMaximized(false);
@@ -229,13 +229,13 @@ public class TicTacToe extends Application{
 		// Reserve space for the button box on the left to prevent it from moving the board when shown later
 		buttonBox.setAlignment(Pos.CENTER_LEFT);
 		buttonBox.setStyle("-fx-padding: 20;"); // spacing from the wall
-		buttonBox.setPrefWidth(200); // reserve space on the left
+		buttonBox.setPrefWidth(250); // reserve space on the left
 		buttonBox.getChildren().clear(); // empty the left side 
 
 		// This allows the board to be in the exact center of the screen by also reserving 500px on the right side to account for the 500px of the buttonBox
 		VBox spacer = new VBox(10);
 		spacer.setAlignment(Pos.CENTER_RIGHT);
-		spacer.setPrefWidth(200);
+		spacer.setPrefWidth(250);
 		// Add score labels at the top and customize them
 		Label scoreText = new Label("SCORES");
 		player1ScoreLabel.setStyle("-fx-background-color: white;-fx-font-size: 35px; -fx-text-fill: blue;");
@@ -267,6 +267,7 @@ public class TicTacToe extends Application{
 		primaryStage.setScene(gameScene);
 		primaryStage.setMaximized(false);
 		primaryStage.setMaximized(true);
+		primaryStage.setFullScreen(true);
 	}
 	/**
 	 * Handles a player's move in single-player mode.
