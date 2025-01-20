@@ -72,6 +72,7 @@ public class TicTacToe extends Application{
 		// Resets scores to 0 when going back to the main menu.
 		player1Score = 0;
 		player2Score = 0;
+		draws = 0;
 		Label titleLabel = new Label("Select Game Mode");
 		Button singlePlayerButton = new Button("Single Player");
 		Button twoPlayerButton = new Button("Two Player");
