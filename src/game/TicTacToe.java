@@ -102,11 +102,12 @@ public class TicTacToe extends Application{
 		VBox modeSelection = new VBox(30, titleLabel, singlePlayerButton,twoPlayerButton);
 		modeSelection.setAlignment(Pos.CENTER);
 
-		Scene mainMenu = new Scene(modeSelection, 400, 300);
+		Scene mainMenu = new Scene(modeSelection);
 		primaryStage.setScene(mainMenu);
 
 		primaryStage.setMaximized(false);
 		primaryStage.setMaximized(true);
+		primaryStage.setFullScreen(true);
 		primaryStage.show();
 
 	}
@@ -150,6 +151,7 @@ public class TicTacToe extends Application{
 		primaryStage.setScene(mainMenu);
 		primaryStage.setMaximized(false);
 		primaryStage.setMaximized(true);
+		primaryStage.setFullScreen(true);
 		primaryStage.show();
 	}
 	/**
@@ -262,6 +264,7 @@ public class TicTacToe extends Application{
 		primaryStage.setScene(gameScene);
 		primaryStage.setMaximized(false);
 		primaryStage.setMaximized(true);
+		primaryStage.setFullScreen(true);
 	}
 	/**
 	 * Handles a player's move in single-player mode.
