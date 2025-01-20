@@ -224,13 +224,13 @@ public class TicTacToe extends Application{
 		// Reserve space for the button box on the left to prevent it from moving the board when shown later
 		buttonBox.setAlignment(Pos.CENTER_LEFT);
 		buttonBox.setStyle("-fx-padding: 20;"); // spacing from the wall
-		buttonBox.setPrefWidth(500); // reserve space on the left
+		buttonBox.setPrefWidth(200); // reserve space on the left
 		buttonBox.getChildren().clear(); // empty the left side 
 
 		// This allows the board to be in the exact center of the screen by also reserving 500px on the right side to account for the 500px of the buttonBox
 		VBox spacer = new VBox(10);
 		spacer.setAlignment(Pos.CENTER_RIGHT);
-		spacer.setPrefWidth(500);
+		spacer.setPrefWidth(200);
 		// Add score labels at the top and customize them
 		Label scoreText = new Label("SCORES");
 		player1ScoreLabel.setStyle("-fx-background-color: white;-fx-font-size: 35px; -fx-text-fill: blue;");
