@@ -101,7 +101,12 @@ public class TicTacToe extends Application{
 		});
 		VBox modeSelection = new VBox(30, titleLabel, singlePlayerButton,twoPlayerButton);
 		modeSelection.setAlignment(Pos.CENTER);
-
+		
+//		Image mainMenuBackground = new Image("file:src/game/difficultySelector.pdn");
+//		ImageView imageView = new ImageView(mainMenuBackground);
+//		StackPane background = new StackPane();
+		
+		
 		Scene mainMenu = new Scene(modeSelection, 400, 300);
 		primaryStage.setScene(mainMenu);
 
@@ -121,7 +126,7 @@ public class TicTacToe extends Application{
 		Label titleLabel = new Label("Choose Your Difficulty");
 		Button easyModeButton = new Button("Easy");
 		Button hardModeButton = new Button("Hard");
-		Image difficultySelector = new Image("file:src/game/difficultySelector.jpeg");
+		Image difficultySelector = new Image("file:src/game/difficultySelector.jpg");
 		ImageView imageView = new ImageView(difficultySelector);
 		StackPane background = new StackPane();
 
